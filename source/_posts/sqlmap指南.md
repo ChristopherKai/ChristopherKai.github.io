@@ -1,5 +1,5 @@
 ---
-title: sqlmap 指南
+title:sqlmap 指南
 tags: 
     - CTF
     - security
