@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>内存管理 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="操作系统,笔记,Operating system,Notes">
+    <meta name="description" content="内存管理连续内存管理 固定大小：MFT 可变大小：MVT  策略：  First fit. Allocate the first hole that is big enough. Searching can start either at the beginning of the set of holes or at the location where the previous first-fi">
+<meta name="keywords" content="操作系统,笔记,Operating system,Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存管理">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/内存管理/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="内存管理连续内存管理 固定大小：MFT 可变大小：MVT  策略：  First fit. Allocate the first hole that is big enough. Searching can start either at the beginning of the set of holes or at the location where the previous first-fi">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969601.png">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969623.png">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969601.png">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内存管理">
+<meta name="twitter:description" content="内存管理连续内存管理 固定大小：MFT 可变大小：MVT  策略：  First fit. Allocate the first hole that is big enough. Searching can start either at the beginning of the set of holes or at the location where the previous first-fi">
+<meta name="twitter:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969601.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">内存管理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">内存管理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.932Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存管理"><span class="post-toc-number">1.</span> <span class="post-toc-text">内存管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连续内存管理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">连续内存管理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#非连续内存分配"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">非连续内存分配</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分段Segmentation："><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">分段Segmentation：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分页Paging："><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">分页Paging：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优势："><span class="post-toc-number">1.2.2.1.</span> <span class="post-toc-text">优势：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#方法："><span class="post-toc-number">1.2.2.2.</span> <span class="post-toc-text">方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#页表具体实现："><span class="post-toc-number">1.2.2.3.</span> <span class="post-toc-text">页表具体实现：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#页表的结构分类"><span class="post-toc-number">1.2.2.4.</span> <span class="post-toc-text">页表的结构分类:</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-内存管理"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">内存管理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.932Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><h2 id="连续内存管理"><a href="#连续内存管理" class="headerlink" title="连续内存管理"></a>连续内存管理</h2><ul>
+<li>固定大小：MFT</li>
+<li><p>可变大小：MVT</p>
+</li>
+<li><p>策略： </p>
+<p><strong>First fit</strong>. Allocate the first hole that is big enough. Searching can start either at the beginning of the set of holes or at the location where the previous first-fit search ended. We can stop searching as soon as we find a free hole that is large enough. </p>
+<p><strong>Best fit</strong>. Allocate the smallest hole that is big enough. We must search the entire list, unless the list is ordered by size. This strategy produces the smallest leftover hole.</p>
+<p><strong>Worst fit</strong>. Allocate the largest hole. Again, we must search the entire list, unless it is sorted by size. This strategy produces the largest leftover hole, which may be more useful than the smaller leftover hole from a best-fit approach.</p>
+<p><em>评价</em>： both first fit and best fit are better than worst fit in terms of decreasing time and storage utilization. Neither first fit nor best fit is clearly better than the other in terms of storage utilization, but first fit is generally faster.</p>
+<p>三种策略都会产生碎片    内外相对于操作系统分配给进程的空间而言。</p>
+<p>1.外部碎片：系统分配的空间之间无法再分配给进程的内存空间   [processA 4k,,between 2KprocessB 5K]  wasted 2k,allocate minimal size 4K<br>2.内部碎片：分配给进程的空间，但是比进程请求大小大的内存空间  [Allocated  10K,  process requeste 4k]    wasted 6k</p>
+</li>
+</ul>
+<p>对待碎片的办法：Compaction，移动进程空间合并空闲内存</p>
+<p>compaction的可行性：Compaction is not always possible, however. If relocation is static and is done at assembly or load time, compaction cannot be done. It is possible only if relocation is dynamic and is done at execution time. If addresses are relocated dynamically, relocation requires only moving the program and data and then changing the base register to reflect the new base address.</p>
+<p>compaction的实现方法：</p>
+<pre><code>1.所有进程移动到内存一端
+2.使进程逻辑地址不连续：
+    2.1.分段segmentation
+    2.2.分页paging
+</code></pre><h2 id="非连续内存分配"><a href="#非连续内存分配" class="headerlink" title="非连续内存分配"></a>非连续内存分配</h2><h3 id="分段Segmentation："><a href="#分段Segmentation：" class="headerlink" title="分段Segmentation："></a>分段Segmentation：</h3><p>原理：程序员视角下，程序分为不同的段，如代码段，数据段，堆。。为了支持这种视角，内存分段。逻辑地址变为<segmentation number,offset=""></segmentation></p>
+<p>C编译器会创建的段：<br>    1.The code</p>
+<pre><code>2. Global variables
+3. The heap, from which memory is allocated
+4. The stacks used by each thread
+5. The standard C libraryLibraries that are linked in during compile time might be assigned separate segments. The loader would take all these segments and assign them segment numbers.
+加载器会给各个段分配段号。
+</code></pre><h3 id="分页Paging："><a href="#分页Paging：" class="headerlink" title="分页Paging："></a>分页Paging：</h3><h4 id="优势："><a href="#优势：" class="headerlink" title="优势："></a>优势：</h4><p>可以避免外部碎片，避免compaction。而且解决了将可变大小内存块备份到back storage的问题，可以使可使用的物理地址范围大于cpu地址指针范围。</p>
+<p>Note.<br>由于进程内存要换swap到back storage上时，由于back storage速度低，同时同样存在碎片，back  storage的compaction就不可行。</p>
+<h4 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h4><p>分割内存为固定大小，称作frames；同时分割逻辑内存为同样大小，称作pages。back storage同样分割为同样大小，或该大小的整数倍。将pages根据page table映射到frame上。逻辑地址前一部分作为page table的索引，后一部分作为frame内的偏移。PTBR和PTLR(page-table length register )，PTLR指明page table的长度</p>
+<p>Terms：<br>page table：<br>逻辑地址物理地址转换表<br>frame table：<br>表示物理内存上的frames 是否可用的表</p>
+<p>对进程context switch 的影响：The operating system maintains a copy of the page table for each process, just as it maintains a copy of the instruction counter and register contents.A pointer to the page table is stored with the other register values (like the instruction counter) in the process control block.<br>每个进程创建一张页表，页表指针和其他寄存器值一同储存在进程控制单元（ process control block）内。</p>
+<h4 id="页表具体实现："><a href="#页表具体实现：" class="headerlink" title="页表具体实现："></a>页表具体实现：</h4><pre><code>1.  DEC PDP-11：用寄存器来实现页表的架构。
+2.  当代架构：PTBR，a page-table base register指向页表，context switch时候只需改变ptbr即可，减少开销。  
+</code></pre><p> 缺点：每次地址转换需要访问两次内存（内存取page number和访问物理地址）    </p>
+<p> 解决方案：<br> 1.TLB，translation look-aside buffer，快表，逻辑地址page number作key，物理地址frame number作value的数组缓存，每次针对page number会与所有项目的key同时比较，所以快,有的会包含ASID信息，用于识别进程以及保护信息，如果没有ASIDs则context switch后，TLB会flush掉TLB以用新进程的page table.TLB的hit ratio 直接影响内存访问性能。</p>
+<p> page table内容：<br> 1.frame number<br> 2.valid 或者invliad 是否存在对应的frame，可能存在一个page被置为vaid但是进程实际空间小于page size，造成内部碎片。</p>
+<p> shared pages:<br> 可以将reentrant code跨进程共享。</p>
+<h4 id="页表的结构分类"><a href="#页表的结构分类" class="headerlink" title="页表的结构分类:"></a>页表的结构分类:</h4><p> 1.hierarchical paging,多级页表aka forward-mapped page table     举例VAX<br> 2.hashed page tables,  变体clustered page tables（？） 举例<br> 3.inverted page tables.反置页表，页表项需包含ASIDs，变体哈希反置页表 ，如何解决共享内存的问题？？？？？</p>
+<p> 分页具体实现：<br> 1.Oracle SPARC Solaris 64位，多级哈希页表，用户和内核相互独立的页表，每个页表项对应一片连续page，包含一个base和span number，指明page数目？？？？。。。。。。<br> 2.8086、8088支持分段，IA32支持分页分段</p>
+<p> 具体<br> <strong><em>IA32：</em></strong><br> CPU –&gt; 逻辑地址  –&gt;分段单元 –&gt; 线性地址 –&gt;分页单元 –&gt;物理地址 —&gt;内存</p>
+<p> 分段：</p>
+<p> MMU 内存管理单元：分段单元，分页单元<br> 段大小可达4GB，每个进程段的数量16K，逻辑地址空间分为2部分，第一部分包含<code>! 2 **13</code>(8K)个段，对进程私有，第二部分 8K段，跨进程共享。第一部分信息在LDT，第二部分在GDT。每个表项8字节，包含基址base和段界限limit。逻辑地址为  (selector, offset)selector为16位，13位 段号，1位指明是LDT还是GDT，2位保护。共有6个段寄存器，允许一个进程同时定址6个段。同时有6个8字节的描述符寄存器，保存gdt，ldt描述符。offset偏移加上selector指向的描述符基址，形成32位线性地址。</p>
+<p> 分页：</p>
+<p> 支持页大小4k或4M。对于4K使用2层分页机制,p1:10位，p2：10位，page offset：12位.p1:作为页目录page directory，cr3寄存器指向当前进程页目录页目录项包含Page_Size的flag表明是4kb还是4MB，如果为4MB，则p2和offset结合起来直接指向4MB的frame<br> 图例<br> <img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969601.png" alt="enter description here" title="pic-1517647969601"><br> PAE（page address extension）的引入：线性地址前两位作为page directory pointer table，<br> <img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969623.png" alt="enter description here" title="pic-1517647969623"></p>
+<p> PAE允许访问的物理空间大于4GBPAE also increased the page-directory and page-table entries from 32 to 64 bits in size, which allowed the base address of page tables and page frames to extend from 20 to 24 bits. Combined with the 12-bit offset, adding PAE support to IA-32 increased the address space to 36 bits, which supports up to 64 GB of physical memory. It is important to note that operating system support is required to use PAE. Both Linux and Intel Mac OS X support PAE. However, 32-bit versions of Windows desktop operating systems still provide support for only 4 GB of physical memory, even if PAE is enabled.windows 又被黑了。</p>
+<p><strong><em>x86-64</em></strong></p>
+<p><strong><em>历史</em></strong></p>
+<p>曾经研发IA64（后来的Itanium），但是未被广泛接受。同时AMD在IA32上拓展，研发了x86-64，结果intel学习了AMD的结构。</p>
+<p>具体</p>
+<p>48位的虚拟地址，页大小4kb，2MB，1GB，使用了4级页表，加上PAE的支持，空间达到52比特<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/pic-1517647969601.png" alt="enter description here" title="pic-1517647969601"></p>
+<p>FROM BOOK OS Concepts:</p>
+<p>Terminology:<br>1.input queue:The processes on the disk that are waiting to be brought into memory for execution form the input queue.    ready queue:The system maintains a ready queue consisting of all processes whose memory images are on the backing store or in memory and are ready to run.<br>2.逻辑地址：cpu生成的地址<br>3.物理地址：内存看到的地址，载入到内存地址寄存器的地址<br>4.虚拟地址：The compile-time and load-time address-binding methods generate identical logical and physical addresses。However, the execution-time address- binding scheme results in differing logical and physical addresses. In this case, we usually refer to the logical address as a virtual address.<br>5.MMU（memory-management unit）：实现逻辑地址到物理地址的转换<br>6.动态加载   只加载自用模块，只需os提供加载库<br>7.动态链接  加载跨进程共享库，需要os协助，因为需要跨进程内存访问<br>8.Swap ，移动操作系统不支持    {        Modified versions of swapping, however, are found on many systems, including UNIX, Linux, and Windows. In one common variation, swapping is normally disabled but will start if the amount of free memory (unused memory available for the operating system or processes to use) falls below a threshold amount. Swapping is halted when the amount of free memory increases. Another variation involves swapping portions of processes—rather than entire processes—to decrease swap time. Typically, these modified forms of swapping work in conjunction with virtual memory, which we cover in Chapter 9.    }<br>9.double buffering<br>10.50-percent rule.：Statistical analysis of first fit, for instance, reveals that, even with some optimization, given N allocated blocks, another 0.5 N blocks will be lost to fragmentation. That is, one-third of memory may be unusable! This property is known as the 50-percent rule.<br>11.wired down：TLB中无法被替换的项目，比如kernel地址<br>12.reentrant code:non-self-modifying code:,it never changes during execution.</p>
+<p>地址绑定：将程序内指令与物理地址绑定绑定可以发生在：<br>1.编译时（编译时确定了运行时绝对地址）<br>2.加载时<br>3.运行时（If the process can be moved during its execution from one memory segment to another, then binding must be delayed until run time. Special hardware must be available for this scheme to work, as will be discussed in Section 8.1.3. Most general-purpose operating systems use this method.）</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.933Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/内存管理/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/内存管理/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Notes/">Notes</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Operating-system/">Operating system</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/笔记/">笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/内存管理/&title=《内存管理》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/内存管理/&title=《内存管理》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/内存管理/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《内存管理》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/内存管理/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/内存管理/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/在chrome内打开微信公众号的方法/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">在chrome内打开微信公众号的方法</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/c笔记/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">c笔记</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/内存管理/&title=《内存管理》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/内存管理/&title=《内存管理》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/内存管理/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《内存管理》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/内存管理/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/内存管理/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMUlEQVR42u3awU7sMAwFUP7/p+dJrJB47VzbAdHkZFWVTprThXHsfHzE4/U5vl5/v3P1q+/jfp6r2RYMDAyMxzJet6O69Ks582eu3vtmTgwMjAMY1SB79UweFa9+lYdyDAwMjOrLeuE1D74YGBgYVUY11Us+CgYGBsY9I9nE3k803/r+0l4cAwPjgYxeY+B3rn+8v4GBgfHnGa/iiFK0YjPyPkxHq8LAwNia0dtATo5KzE+FFDJcDAyMLRh5ub/3hSZN0ELRDQMD4wDG2uX2ymeTwh8GBsYJjPzFvUxsfucNCQMD4wBGdfOZH//qtTbzA2Tl/xsYGBiPZUwaioWXBZ8mn+E//Q0MDIxNGZOS/eSAV3VL3NyXY2BgbMSY6KvsauOzmSBiYGAcxpgUyPJAnDc1mwEXAwPjsYyfK/Gv/eubsI6BgbE1Iz+rkN/PF704lcTAwNiasWpxvUXn7YEoBGNgYGzKSB5KCnD5ZnjSwsTAwDiTkbce58vKD3BUi3EYGBi7MqJTGK3DFnkgTj7Zm4+IgYFxGKOXtI0K+nFaGe2DMTAwtmP09oDVIv6k2TAJ+hgYGHswXsVxn/ZVj270Eseot4CBgbERY1V+VU0ie59pQcqIgYHxWEY+dfVQRa9V0GwwYGBgHMDIi/u96zzI9kqEGBgYGJMtaBKOq4F4FHAxMDAOYMwTvkmT4PLtGBgYBzDmm9h5mzPfKmNgYJzGWHU6Y9JuzMP3sv4GBgbGMxj/ALwl/vUdEch3AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

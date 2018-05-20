@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>CTF经验总结 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,CTF,security,网络安全">
+    <meta name="description" content="思考方向字符串：形式：字符串末尾为=  方向：base64，base32，base16编码 形式：ocjp{zkirjwmo-ollj-nmlw-joxi-tmolnrnotvms} 方向：凯撒密码，弗吉尼亚密码,猪圈密码 形式：fgkjol-ljimnoml{iw-lnwo-ortsazrmojm-xtlnv} 方向：栅栏密码 形式：21232f297a57a5a743894a0e4a801fc">
+<meta name="keywords" content="Note,CTF,security,网络安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF经验总结">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/CTF经验总结/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="思考方向字符串：形式：字符串末尾为=  方向：base64，base32，base16编码 形式：ocjp{zkirjwmo-ollj-nmlw-joxi-tmolnrnotvms} 方向：凯撒密码，弗吉尼亚密码,猪圈密码 形式：fgkjol-ljimnoml{iw-lnwo-ortsazrmojm-xtlnv} 方向：栅栏密码 形式：21232f297a57a5a743894a0e4a801fc">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CTF经验总结">
+<meta name="twitter:description" content="思考方向字符串：形式：字符串末尾为=  方向：base64，base32，base16编码 形式：ocjp{zkirjwmo-ollj-nmlw-joxi-tmolnrnotvms} 方向：凯撒密码，弗吉尼亚密码,猪圈密码 形式：fgkjol-ljimnoml{iw-lnwo-ortsazrmojm-xtlnv} 方向：栅栏密码 形式：21232f297a57a5a743894a0e4a801fc">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CTF经验总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CTF经验总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.928Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思考方向"><span class="post-toc-number">1.</span> <span class="post-toc-text">思考方向</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#字符串："><span class="post-toc-number">1.1.</span> <span class="post-toc-text">字符串：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图片文件："><span class="post-toc-number">1.2.</span> <span class="post-toc-text">图片文件：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#音频文件："><span class="post-toc-number">1.3.</span> <span class="post-toc-text">音频文件：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#软件工具："><span class="post-toc-number">2.</span> <span class="post-toc-text">软件工具：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#工具脚本"><span class="post-toc-number">3.</span> <span class="post-toc-text">工具脚本</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#出题办法"><span class="post-toc-number">3.0.1.</span> <span class="post-toc-text">出题办法</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CTF经验总结"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CTF经验总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.928Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="思考方向"><a href="#思考方向" class="headerlink" title="思考方向"></a>思考方向</h2><h3 id="字符串："><a href="#字符串：" class="headerlink" title="字符串："></a>字符串：</h3><p>形式：字符串末尾为= </p>
+<p>方向：base64，base32，base16编码</p>
+<p>形式：<strong>ocjp{zkirjwmo-ollj-nmlw-joxi-tmolnrnotvms}</strong></p>
+<p>方向：<a href="https://cryptii.com/caesar-cipher" target="_blank" rel="external">凯撒密码</a>，<a href="https://cryptii.com/caesar-cipher" target="_blank" rel="external">弗吉尼亚密码</a>,猪圈密码</p>
+<p>形式：<strong>fgkjol-ljimnoml{iw-lnwo-ortsazrmojm-xtlnv}</strong></p>
+<p>方向：栅栏密码</p>
+<p>形式：<strong>21232f297a57a5a743894a0e4a801fc3</strong></p>
+<p>方向：16进制解码，MD5解密</p>
+<p>形式：<strong>=E6=8A=80=E6=9C=AF=E6=9C=89=E6=B8=A9=E5=BA=A6</strong></p>
+<p>方向：<a href="http://www.mxcz.net/tools/QuotedPrintable.aspx" target="_blank" rel="external">可打印字符编码</a>。类似百分号编码，代替%为=。百分号编码使用python <code>urllib.parse.unquote</code></p>
+<p>形式：+++++ +++++ [-&gt;++ +++++ +++&lt;] &gt;++.+ +++++ .&lt;+++ [-&gt;– -&lt;]&gt;- -.+++ +++.&lt;</p>
+<p>方向：<a href="https://www.splitbrain.org/services/ook" target="_blank" rel="external">brainfuck编程语言</a></p>
+<h3 id="图片文件："><a href="#图片文件：" class="headerlink" title="图片文件："></a>图片文件：</h3><pre><code>1.用silentEye查隐写术
+
+2.用hxD查二进制内容是否包含flag
+
+3.用binwalk查看是否为多张图片
+</code></pre><h3 id="音频文件："><a href="#音频文件：" class="headerlink" title="音频文件："></a>音频文件：</h3><pre><code>1.silentEye查隐写术
+
+2.频谱分析
+</code></pre><h2 id="软件工具："><a href="#软件工具：" class="headerlink" title="软件工具："></a>软件工具：</h2><p><a href="http://www.cmd5.com/" target="_blank" rel="external">md5解密</a></p>
+<p><a href="https://silenteye.v1kings.io/" target="_blank" rel="external">SilentEye</a></p>
+<p><a href="https://mh-nexus.de/en/hxd/" target="_blank" rel="external">hxD</a></p>
+<p><a href="https://cryptii.com/caesar-cipher" target="_blank" rel="external">各种古典密码解密</a></p>
+<p>binwalk进行二进制文件的分析<br>安装：<code>sudo apt-get install binwalk</code></p>
+<h2 id="工具脚本"><a href="#工具脚本" class="headerlink" title="工具脚本"></a>工具脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将16进制编码字符串转为ascii字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#python3</span></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line">binascii.unhexlify(<span class="string">'666c61677b686578327374725f6368616c6c656e67657d'</span>)</span><br><span class="line">参数：<span class="number">16</span>进制字符串，</span><br><span class="line">返回值：bytes</span><br><span class="line"></span><br><span class="line"><span class="comment">#python2</span></span><br><span class="line"><span class="string">'666c61677b686578327374725f6368616c6c656e67657d'</span>.decode(<span class="string">'hex'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#计算与flag字符串差值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calDiff</span><span class="params">(mstr, flag = <span class="string">"flag"</span>)</span>:</span></span><br><span class="line">    res = []</span><br><span class="line">    <span class="keyword">for</span> (i,c) <span class="keyword">in</span> enumerate(flag):</span><br><span class="line">        res.append(ord(mstr[i]) - ord(c))</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#猪圈密码解密</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    dic = &#123;<span class="string">'a'</span>: <span class="string">'j'</span>, <span class="string">'b'</span>: <span class="string">'k'</span>, <span class="string">'c'</span>: <span class="string">'l'</span>, <span class="string">'d'</span>: <span class="string">'m'</span>, <span class="string">'e'</span>: <span class="string">'n'</span>, <span class="string">'f'</span>: <span class="string">'o'</span>, <span class="string">'g'</span>: <span class="string">'p'</span>, <span class="string">'h'</span>: <span class="string">'q'</span>, <span class="string">'i'</span>: <span class="string">'r'</span>, <span class="string">'s'</span>: <span class="string">'w'</span>, <span class="string">'v'</span>: <span class="string">'z'</span>,</span><br><span class="line">           <span class="string">'t'</span>: <span class="string">'x'</span>, <span class="string">'u'</span>: <span class="string">'y'</span>, <span class="string">'j'</span>: <span class="string">'a'</span>, <span class="string">'k'</span>: <span class="string">'b'</span>, <span class="string">'l'</span>: <span class="string">'c'</span>, <span class="string">'m'</span>: <span class="string">'d'</span>, <span class="string">'n'</span>: <span class="string">'e'</span>, <span class="string">'o'</span>: <span class="string">'f'</span>, <span class="string">'p'</span>: <span class="string">'g'</span>, <span class="string">'q'</span>: <span class="string">'h'</span>, <span class="string">'r'</span>: <span class="string">'i'</span>,</span><br><span class="line">           <span class="string">'w'</span>: <span class="string">'s'</span>, <span class="string">'z'</span>: <span class="string">'v'</span>, <span class="string">'x'</span>: <span class="string">'t'</span>, <span class="string">'y'</span>: <span class="string">'u'</span>&#125;</span><br><span class="line">    crypto = sys.argv[<span class="number">1</span>]</span><br><span class="line">    plaintext = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> crypto:</span><br><span class="line">        <span class="keyword">if</span> c <span class="keyword">in</span> dic:</span><br><span class="line">            plaintext += dic[c]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            plaintext += c</span><br><span class="line">    print(plaintext)</span><br><span class="line"></span><br><span class="line"><span class="comment">#TODO 按照不同组合数解密栅栏密码</span></span><br><span class="line"><span class="comment">#TODO 凯撒密码解密,rotN</span></span><br></pre></td></tr></table></figure>
+<p>其他工具：<br>python -m http.server</p>
+<h4 id="出题办法"><a href="#出题办法" class="headerlink" title="出题办法"></a>出题办法</h4><p>1.根据编辑器窗口宽度改变ascii字符显示flag</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.928Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/CTF经验总结/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/CTF经验总结/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/security/">security</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络安全/">网络安全</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/CTF经验总结/&title=《CTF经验总结》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/CTF经验总结/&title=《CTF经验总结》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/CTF经验总结/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CTF经验总结》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/CTF经验总结/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/CTF经验总结/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/SQL注入/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">SQL注入</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/CPU调度/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">CPU调度</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/CTF经验总结/&title=《CTF经验总结》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/CTF经验总结/&title=《CTF经验总结》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/CTF经验总结/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CTF经验总结》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/CTF经验总结/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/CTF经验总结/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3azWpDIRRF4bz/S6fQUSGtWXtfU7jH5ShciPo5kPPj44HH83u8fvk5yHfy+3WtbUOGDBm3ZTyXY73weivreQiD7E2GDBnnMNaXbLrALirZmwwZMmTwAG49z/og1l9kyJAho7tweUbJ8TJkyJCxZpBwjVypJPgjhbwP5uIyZMi4ISNtDPzn7w/2N2TIkHETxjMc3QxpYhzvSoYMGaMZJDjr0touHb1SgJMhQ8Y5jO7aTf97pVWAqoYyZMgYxODWtASWFuy6Zxa/RLgyZMgYyujakLxAxhsGZTFOhgwZhzH4RLtCvbTNiS5cGTJkDGKQIOxKKrurAYBKbzJkyDiAkSau/GEEDwfJofz5XYYMGaMZVxLXXdSUJEOGjDMZ3UMKXsrvSmk8kZYhQ8ZsRpAo4kYjx6dXMMrFZciQMYjRTd2Fd7wMFx+oDBkyRjPSZkDwAGJTq6C8smXIkDGU0V27PN1Nn4iVjQEZMmQMZZDwK/1OZkufiMUtARkyZIxgkK100Vfal+iOUoYMGecweMGrW7K7xOMXIjJkyBjKSNuQacvzUuUv3acMGTKGMp7huJ7EEhJZV4YMGecwdl2yadGftBO6RoIMGTKmMtKnFWkZLj25cg8yZMg4gHHlku0OouO9iXNlyJBxPIMHdiQOJelrQJUhQ4aMsBmQPvDiJbY3SawMGTJGM3iBrCvWd41P3hyVIUPGbMauxkBa1u/S4y4BliFDxm0ZXz+T8C4MvJOqAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>在chrome内打开微信公众号的方法 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,web,wechat">
+    <meta name="description" content="问题：“请在微信客户端打开链接”。 不要问为啥把好好能在微信打开的网页放在chrome里面打开，因为你能debug卡断点，看代码啊！ 首先，需要明白，打开一个第三方网页的时候到底发生了什么。当你在微信内打开一个公众号网页，其会访问公众号的第三方网站如https://appsth.h5.xiaoeknow.com/content_page/example，如果公众号检测到请求的User-Agent,">
+<meta name="keywords" content="Note,web,wechat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在chrome内打开微信公众号的方法">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="问题：“请在微信客户端打开链接”。 不要问为啥把好好能在微信打开的网页放在chrome里面打开，因为你能debug卡断点，看代码啊！ 首先，需要明白，打开一个第三方网页的时候到底发生了什么。当你在微信内打开一个公众号网页，其会访问公众号的第三方网站如https://appsth.h5.xiaoeknow.com/content_page/example，如果公众号检测到请求的User-Agent,">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526563881042.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526563736658.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526565326711.jpg">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在chrome内打开微信公众号的方法">
+<meta name="twitter:description" content="问题：“请在微信客户端打开链接”。 不要问为啥把好好能在微信打开的网页放在chrome里面打开，因为你能debug卡断点，看代码啊！ 首先，需要明白，打开一个第三方网页的时候到底发生了什么。当你在微信内打开一个公众号网页，其会访问公众号的第三方网站如https://appsth.h5.xiaoeknow.com/content_page/example，如果公众号检测到请求的User-Agent,">
+<meta name="twitter:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526563881042.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">在chrome内打开微信公众号的方法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">在chrome内打开微信公众号的方法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.933Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-在chrome内打开微信公众号的方法"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">在chrome内打开微信公众号的方法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.933Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>问题：“请在微信客户端打开链接”。<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526563881042.jpg" alt="“请在微信客户端打开链接”"></p>
+<p>不要问为啥把好好能在微信打开的网页放在chrome里面打开，因为你能debug卡断点，看代码啊！</p>
+<p>首先，需要明白，打开一个第三方网页的时候到底发生了什么。当你在微信内打开一个公众号网页，其会访问公众号的第三方网站如<code>https://appsth.h5.xiaoeknow.com/content_page/example</code>，如果公众号检测到请求的User-Agent,Cookie,Referer不对，则会返回HTTP 302，将浏览器重定向到响应头部的Location字段。所以，要避免这一重定向，就将要发送的HTTP头部使用chrome插件修改。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526563736658.jpg" alt="windows微信客户端访问公众号的http请求头部"></p>
+<p>安装chrome插件：<a href="https://chrome.google.com/webstore/detail/modify-headers-for-google/innpjfdalfhpcoinfnehdnbkglpmogdi?hl=en-US" target="_blank" rel="external">Modify Headers for Google Chrome</a></p>
+<p>修改浏览器http头部：<br>最重要的User-Agent：Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 MicroMessenger/6.5.2.501 NetType/WIFI WindowsWechat QBCore/3.43.691.400 QQBrowser/9.0.2524.400<br>次重要的Cookie：按具体网页而定，经过抓包分析(推荐<a href="http://blog.devtang.com/2015/11/14/charles-introduction/" target="_blank" rel="external">charles</a>)<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1526565326711.jpg" alt="修改http头部"></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.933Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/在chrome内打开微信公众号的方法/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wechat/">wechat</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&title=《在chrome内打开微信公众号的方法》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&title=《在chrome内打开微信公众号的方法》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在chrome内打开微信公众号的方法》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/用Python写一个超简单的静态网站服务器/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">用Python写一个超简单的静态网站服务器</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/内存管理/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">内存管理</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&title=《在chrome内打开微信公众号的方法》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&title=《在chrome内打开微信公众号的方法》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在chrome内打开微信公众号的方法》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/在chrome内打开微信公众号的方法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACvUlEQVR42u3aQW7jMBAEwPz/01lgr4Gc7hnS8aF0MgxZZCkAyfTM11d8ff+/nr7/eSW/erqnfdqBCw8PD2809Xairwf7+YQn2Gte8s3TnPHw8PBu8/bLd34l20/CizYwPDw8vD/l5UO2B+LZ8/Hw8PA+n5cfcNtJ5GEHHh4e3ufwkjAiiQ9mG8DsxR3OWvDw8PAmaUBUAPuEzxfre3h4eHiLqvp+q3hd6JrdWcwTDw8P7wIveWgbuebxa14Myw/lRRcDHh4e3pqXtAjkzVJt41QbPeStXXh4eHg3eLP/7pOCVvt9O2K9SeDh4eGtefni3oYU7fPbrWLYE4GHh4e35p0qOM1i3Dyu3YyCh4eHd5aXh63tnTeCg7zkhoeHh/ceXlvUbwdrWw3yjecxvMDDw8O7xmsLWpvmgNmGkf+q3knw8PDwSt6sjSkva7WBRR5JFNsSHh4e3lFeHh/kS3xy5N1Ew69f5S9Hajw8PLw1b3OETQDJK2iX/tms8PDw8M7y8kV2Uwxrm6hOtRfg4eHh3eNtilj5RGcBRNtS8EvWgoeHh3eI1zZjtQfr5EC8CXyLfQ8PDw/vKC+PX5M4Nd8kZgfx6M+Ah4eHd413KmxN7v+Kr7oPAg8PD+8tvDbz3EQS7bSSzaOIMPDw8PAO8dqy/axwNYs88jaCxxni4eHhXeAlAWt+qN0cfNsYotiK8PDw8I7y2kfMAoj9k2eBMh4eHt5tXr5tzCbatmHNoo2opwwPDw9vxPsur/z4m7cX5C0I+TaDh4eHd4+3WXZzfFuLSw7TyYh4eHh493htBNB+3rQmbEITPDw8vNu8NoBoB96X0NpmBTw8PLzP4SXLfTK5/euIxsXDw8P7U97mRbTtBZsDNx4eHt57eHn7VLLQt40Cs8C3OFLj4eHhHeXtC2CzJbttR9i0KeDh4eEd4v0DvIppzlaK+SgAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

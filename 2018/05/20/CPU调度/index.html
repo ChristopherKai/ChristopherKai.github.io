@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>CPU调度 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,Operating System,操作系统">
+    <meta name="description" content="目的：CPU作为一种资源，应当提高利用率，合理利用。 发现：进程执行存在着CPU和IO周期，不断在使用CPU和IO操作间切换。IO瓶颈型进程多为短暂的CPU burst，CPU瓶颈型进程CPU burst较长。  CPU调度器职责：从就绪队列(ready queue)选择即将占用CPU的进程。就绪队列没必要以FIFO队列形式存在，可以是链表，优先队列，树等。 抢占式调度 preemptive sc">
+<meta name="keywords" content="Note,Operating System,操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPU调度">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/CPU调度/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="目的：CPU作为一种资源，应当提高利用率，合理利用。 发现：进程执行存在着CPU和IO周期，不断在使用CPU和IO操作间切换。IO瓶颈型进程多为短暂的CPU burst，CPU瓶颈型进程CPU burst较长。  CPU调度器职责：从就绪队列(ready queue)选择即将占用CPU的进程。就绪队列没必要以FIFO队列形式存在，可以是链表，优先队列，树等。 抢占式调度 preemptive sc">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521633568672.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522417224584.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522418549196.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522420303976.jpg">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CPU调度">
+<meta name="twitter:description" content="目的：CPU作为一种资源，应当提高利用率，合理利用。 发现：进程执行存在着CPU和IO周期，不断在使用CPU和IO操作间切换。IO瓶颈型进程多为短暂的CPU burst，CPU瓶颈型进程CPU burst较长。  CPU调度器职责：从就绪队列(ready queue)选择即将占用CPU的进程。就绪队列没必要以FIFO队列形式存在，可以是链表，优先队列，树等。 抢占式调度 preemptive sc">
+<meta name="twitter:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521633568672.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CPU调度</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CPU调度</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.927Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CPU调度器"><span class="post-toc-number">1.</span> <span class="post-toc-text">CPU调度器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#抢占式调度-preemptive-scheduling"><span class="post-toc-number">2.</span> <span class="post-toc-text">抢占式调度 preemptive scheduling</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Dispatcher"><span class="post-toc-number">3.</span> <span class="post-toc-text">Dispatcher</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调度算法评价指标"><span class="post-toc-number">4.</span> <span class="post-toc-text">调度算法评价指标</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调度算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">调度算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#FCFS"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">FCFS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SJF"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">SJF</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Priority-Scheduling"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">Priority Scheduling</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Round-Robin"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">Round-Robin</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#多级队列-MQ"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">多级队列 MQ</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#多级反馈队列"><span class="post-toc-number">5.6.</span> <span class="post-toc-text">多级反馈队列</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程调度"><span class="post-toc-number">6.</span> <span class="post-toc-text">线程调度</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PCS-Process-Contention-Scope"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">PCS (Process Contention Scope)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SCS-System-Contention-Scope"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">SCS (System Contention Scope)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#POSIX-设置竞争范围api"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">POSIX 设置竞争范围api</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多处理器调度"><span class="post-toc-number">7.</span> <span class="post-toc-text">多处理器调度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Processor-Affinity-进程亲和性"><span class="post-toc-number">8.</span> <span class="post-toc-text">Processor Affinity 进程亲和性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Load-Balancing-负载均衡"><span class="post-toc-number">9.</span> <span class="post-toc-text">Load Balancing 负载均衡</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#push-migration"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">push migration</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#pull-miragtion"><span class="post-toc-number">9.2.</span> <span class="post-toc-text">pull miragtion</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多核处理器"><span class="post-toc-number">10.</span> <span class="post-toc-text">多核处理器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实时操作系统"><span class="post-toc-number">11.</span> <span class="post-toc-text">实时操作系统</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#POSIX-实时调度api"><span class="post-toc-number">11.1.</span> <span class="post-toc-text">POSIX 实时调度api</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#操作系统实例"><span class="post-toc-number">12.</span> <span class="post-toc-text">操作系统实例</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Linux"><span class="post-toc-number">12.1.</span> <span class="post-toc-text">Linux</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#CFS"><span class="post-toc-number">12.1.1.</span> <span class="post-toc-text">CFS</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#realtime"><span class="post-toc-number">12.1.2.</span> <span class="post-toc-text">realtime</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#windows"><span class="post-toc-number">12.2.</span> <span class="post-toc-text">windows</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法评估"><span class="post-toc-number">13.</span> <span class="post-toc-text">算法评估</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优先级反置"><span class="post-toc-number">14.</span> <span class="post-toc-text">优先级反置</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CPU调度"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CPU调度</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.927Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>目的：CPU作为一种资源，应当提高利用率，合理利用。</p>
+<p>发现：进程执行存在着CPU和IO周期，不断在使用CPU和IO操作间切换。IO瓶颈型进程多为短暂的CPU burst，CPU瓶颈型进程CPU burst较长。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1521633568672.jpg" alt="CPU burst持续时间分布"></p>
+<h2 id="CPU调度器"><a href="#CPU调度器" class="headerlink" title="CPU调度器"></a>CPU调度器</h2><p>职责：从就绪队列(ready queue)选择即将占用CPU的进程。就绪队列没必要以FIFO队列形式存在，可以是链表，优先队列，树等。</p>
+<h2 id="抢占式调度-preemptive-scheduling"><a href="#抢占式调度-preemptive-scheduling" class="headerlink" title="抢占式调度 preemptive scheduling"></a>抢占式调度 preemptive scheduling</h2><p>非抢占式调度发生在：<br>    1.进程主动从运行态切换至等待态(IO操作或者wait()子进程)<br>    2.进程终结</p>
+<p>抢占调度发生在：<br>    1.进程从运行态转为就绪态（比如发生中断）<br>    2.进程从等待态转为就绪态（比如IO完成）</p>
+<p>抢占式调度必须依赖特定硬件环境才可实现，比如一个timer。</p>
+<p>抢占调度带来的问题：<br>1.race condition，两个进程访问同一内存，发生抢占<br>2.内核设计。系统调用等。</p>
+<h2 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h2><p>职责：<br>1.上下文切换<br>2.特权模式切换<br>3.重启进程</p>
+<p>从一个进程切换到另外一个进程的时间被称为dispatch latency。</p>
+<h2 id="调度算法评价指标"><a href="#调度算法评价指标" class="headerlink" title="调度算法评价指标"></a>调度算法评价指标</h2><p>1.CPU利用率。<br>2.吞吐量。单位时间内完成的进程数。<br>3.turnaround 时间：进程从加载到内存，就绪队列等待时间，CPU执行时间，IO等待时间。<br>4.等待时间：进程在就绪队列的等待时间。<br>5.响应时间。</p>
+<p>一般来讲，倾向于最大化1.2.，最小化3.4.5.。研究发现，在交互式系统上，最小化响应时间的方差比最小化平均响应时间效果更好。因为一个有着合理并可预测响应时间的交互式系统更好用。</p>
+<h2 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h2><h3 id="FCFS"><a href="#FCFS" class="headerlink" title="FCFS"></a>FCFS</h3><p>First Come First Serve算法：先请求CPU的先使用CPU。</p>
+<p>实现：FIFO队列。<br>抢占式：否<br>缺点：convoy effect</p>
+<h3 id="SJF"><a href="#SJF" class="headerlink" title="SJF"></a>SJF</h3><p>Shortest Job First算法：按照进程下次使用CPU的时长，最小的优先使用CPU。</p>
+<p>别名：shortest-nextCPU-burst算法。<br>实现：优先队列<br>抢占式：是<br>备注：短期调度器实现困难，因为进程的下一次CPU burst难以预估。在长期调度器中使用频繁。</p>
+<p>Un+1 = a * tn +　(1 - a)Un 指数平均数，根据历史估测和历史CPU burst时长来来估算下一次CPU burst。</p>
+<h3 id="Priority-Scheduling"><a href="#Priority-Scheduling" class="headerlink" title="Priority Scheduling"></a>Priority Scheduling</h3><p>实现：优先队列<br>抢占式：不定，可以抢占CPU或者仅仅放入优先队列</p>
+<p>优先队列调度会产生饥饿，即一些进程永远得不到CPU时间。解决办法，引入aging，随着时间增加，提升进程优先级，最终低优先级进程会得到执行。</p>
+<h3 id="Round-Robin"><a href="#Round-Robin" class="headerlink" title="Round-Robin"></a>Round-Robin</h3><p>Round-Robin：队列内所有进程分配特定大小时间片，进程执行时间小于该时间片，切换到下一个进程，进程执行时间长于该时间将被下一个进程抢占CPU。</p>
+<p>抢占式：是<br>实现：循环队列</p>
+<p>在时间片很大情况下，退化为FCFS算法。</p>
+<h3 id="多级队列-MQ"><a href="#多级队列-MQ" class="headerlink" title="多级队列 MQ"></a>多级队列 MQ</h3><p>根据进程特性分配到不同队列，各个队列有各自的调度算法，队列间存在优先级，进程无法在队列间切换优先级。</p>
+<h3 id="多级反馈队列"><a href="#多级反馈队列" class="headerlink" title="多级反馈队列"></a>多级反馈队列</h3><p>进程优先级会在各个队列间移动。结果：IO密集型会在高优先级队列，CPU密集型会在低优先级队列。</p>
+<h2 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h2><h3 id="PCS-Process-Contention-Scope"><a href="#PCS-Process-Contention-Scope" class="headerlink" title="PCS (Process Contention Scope)"></a>PCS (Process Contention Scope)</h3><p>在多对一，多对多线程模型下，多个用户线程互相竞争分配到内核线程的机会，所以，竞争范围为一个进程内，为PCS。</p>
+<h3 id="SCS-System-Contention-Scope"><a href="#SCS-System-Contention-Scope" class="headerlink" title="SCS (System Contention Scope)"></a>SCS (System Contention Scope)</h3><p>内核线程一起竞争CPU，竞争范围为SCS。</p>
+<h3 id="POSIX-设置竞争范围api"><a href="#POSIX-设置竞争范围api" class="headerlink" title="POSIX 设置竞争范围api"></a>POSIX 设置竞争范围api</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// scope 可选值PTHREAD_SCOPE_PROCESS,PTHREAD_SCOPE_SYSTEM</span></span><br><span class="line">pthread_attr_setscope(<span class="keyword">pthread_attr_t</span> *attr, <span class="keyword">int</span> scope)</span><br><span class="line">pthread_attr_getscope(<span class="keyword">pthread_attr_t</span> *attr, <span class="keyword">int</span> *scope)</span><br></pre></td></tr></table></figure>
+<p>在Linux和Mac OS上只支持PTHREAD_SCOPE_SYSTEM。</p>
+<h2 id="多处理器调度"><a href="#多处理器调度" class="headerlink" title="多处理器调度"></a>多处理器调度</h2><p>主要目标负载共享，load sharing。</p>
+<p>SMP:symmetric multiprocessing</p>
+<h2 id="Processor-Affinity-进程亲和性"><a href="#Processor-Affinity-进程亲和性" class="headerlink" title="Processor Affinity 进程亲和性"></a>Processor Affinity 进程亲和性</h2><p>定义：进程偏向当前正在执行的处理器。<br>原因：每个处理器都有自己的缓存cache。当一个进程从一个CPU调度到另一个CPU的时候，原CPU和该进程有关的缓存必须invalidate，调度到的CPU的缓存必须重新产生，这样，调度的时候最好不要将进程跨处理器调度，降低cache更新的成本。</p>
+<p>soft affinity：尽量使进程一直运行在一个处理器上，但不保证一直运行在一个处理器上。<br>hard affinity：操作系统提供syscall，让进程只运行在一部分处理器上。</p>
+<p>eg. Linux实现了soft affinity，但是可用<code>sched_setaffinity()</code>设置hard affinity。</p>
+<h2 id="Load-Balancing-负载均衡"><a href="#Load-Balancing-负载均衡" class="headerlink" title="Load Balancing 负载均衡"></a>Load Balancing 负载均衡</h2><p>Load balancing试图使工作量在处理器间均匀分布。<br>在每个处理器有私有调度队列时，load balancing是必要的。而所有处理器共享调度队列时，load balacing不必要，调度器会自动将工作分摊给空闲处理器。当代支持SMP的操作系统大多有各自的调度队列。 </p>
+<p>load balacing 的两种办法: push migration,pull migration。这两种并不排斥，linux上同时实现了两者。</p>
+<h3 id="push-migration"><a href="#push-migration" class="headerlink" title="push migration"></a>push migration</h3><p>push migration: 特定任务周期性检测各个处理器负载，主动将进程均匀分布。</p>
+<h3 id="pull-miragtion"><a href="#pull-miragtion" class="headerlink" title="pull miragtion"></a>pull miragtion</h3><p>pull migration: 空闲处理器主动将忙处理器的等待进程拉取。</p>
+<p>Note.  维持负载均衡的过程中，有违处理器亲和性Processor Affinity。</p>
+<h2 id="多核处理器"><a href="#多核处理器" class="headerlink" title="多核处理器"></a>多核处理器</h2><p>memeory stall: cpu访问内存，等待数据可用的时间。</p>
+<p>// TODO </p>
+<h2 id="实时操作系统"><a href="#实时操作系统" class="headerlink" title="实时操作系统"></a>实时操作系统</h2><p>Soft real-time system： 不保证critical进程何时被调度，但保证critical进程会比non critical进程优先。</p>
+<p>Hard real-time system： 保证进程在期限前完成。超出期限则等同于没有服务。</p>
+<p>实时操作系统是事件驱动的，事件可能是软件的（时间中断）或者硬件的(汽车探测到路障)。</p>
+<p>event latency：事件发生到收到服务的时间。必须保证这段时间内事件得到服务，否则超过期限，服务将无意义。</p>
+<p>// TODO</p>
+<h3 id="POSIX-实时调度api"><a href="#POSIX-实时调度api" class="headerlink" title="POSIX 实时调度api"></a>POSIX 实时调度api</h3><h2 id="操作系统实例"><a href="#操作系统实例" class="headerlink" title="操作系统实例"></a>操作系统实例</h2><h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>版本v2.5以前使用unix调度算法的变体。v2.5开始使用O(1)的调度算法，开始支持SMP，处理器亲和性，负载均衡。由于对交互式进程支持不够好，重新设计了Completely Fair Scheduler（CFS）调度算法。</p>
+<p>调度基于调度类scheduling class。scheduling class有不同的优先级。标准linux实现了两种调度类：1.CFS 2.realtime 。为了决定哪个进程占用cpu，调度器从高优先级的调度类内选择高优先级的进程。</p>
+<h4 id="CFS"><a href="#CFS" class="headerlink" title="CFS"></a>CFS</h4><p>不具体根据优先级分配时间片大小，CFS分配一定比例cpu时间。该比例的计算依据nice值，nice取值范围-20 到19，越小优先级越高，分配cpu比例更多，缺省值为0。nice的意思是一个进程越nice，对其他进程越nice，让给其他进程更多cpu。<br>CFS使用目标延迟(target latency)分配时间，target latency即进程在至少运行一次的时间间隔。目标延迟除了有缺省值，最小值，其会随着进程数量增加而增加。</p>
+<p>CFS会记录进程运行时间，用虚拟运行时间vruntime。进程优先级决定了衰减因子(decay factor)，优先级越低衰减因子越大。对缺省nice值0，虚拟运行时间vruntime等于实际运行时间。低优先级进程若vruntime 200ms，实际运行时间会小于200ms。高优先级进程若vruntime为200ms，实际运行时间大于200ms。<br>调度时，选择vruntime较小的进程，而且高优先级进程会抢占低优先级进程。</p>
+<p>具体分析：<br>比如，两个nice值一样的进程，一个IO密集型，一个CPU密集型。一般第一个进程只会运行短暂时间，第二个则会耗尽时间片。所有，第一个进程的vruntime会比第二个小，优先调度。在第二个进程运行时，若第一个进程IO请求返回时，则会抢占CPU。</p>
+<p>实现：<br>按照进程vruntime作为key组织进程红黑树，就绪队列。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522417224584.jpg" alt="vruntime红黑树"></p>
+<h4 id="realtime"><a href="#realtime" class="headerlink" title="realtime"></a>realtime</h4><p>任何SCHED_FIFO 或SCHED_RR任务优先级高于非实时任务。实时任务优先级静态映射0-99，非实时任务的nice值-20映射100,19映射139。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522418549196.jpg" alt="Linux进程优先级"></p>
+<h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><p>windows使用基于优先级的抢占式调度算法。其确保最高优先级进程一直运行。内核调度模块被称为Dispatcher。最高优先级进程会一直运行直到，被更高优先级进程抢占，终止，IO请求，时间片耗尽。</p>
+<p>优先级分为12档。两类优先级：1.可变 variable class 2.realtime class。<br>第一类 ， 1-15。 第二类，16 - 30。（优先级0用来内存管理线程）。Dispatcher从队列选择高优先级进程，若无执行idle进程。<br>windos api定义了6类进程优先级，默认NORMAL_PRIORITY_CLASS。<code>SetPriorityClass()</code>设置优先级。除了REALTIME_PRIORITY_CLASS外，优先级类都可修改，即 variable class。</p>
+<p>一个线程优先级由其所属优先级类和相对优先级共同决定。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1522420303976.jpg" alt="windos进程优先级"></p>
+<h2 id="算法评估"><a href="#算法评估" class="headerlink" title="算法评估"></a>算法评估</h2><p>// TODO</p>
+<h2 id="优先级反置"><a href="#优先级反置" class="headerlink" title="优先级反置"></a>优先级反置</h2><p>// TODO!</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.928Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/CPU调度/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/CPU调度/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Operating-System/">Operating System</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/CPU调度/&title=《CPU调度》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/CPU调度/&title=《CPU调度》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/CPU调度/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CPU调度》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/CPU调度/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/CPU调度/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/CTF经验总结/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">CTF经验总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/11/24/数字签名/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">消息摘要、数字签名与CA证书</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/CPU调度/&title=《CPU调度》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/CPU调度/&title=《CPU调度》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/CPU调度/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CPU调度》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/CPU调度/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/CPU调度/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABvElEQVR42u3aS47DIBAFwNz/0p5tpJHJaxqIZ1SsLIs4xabVH16veF1vK9nze+f7m+RrrYWLi9vmXsM1pozfV5/HBlxc3PPcu4iRPydBLTneBxsuLu4juXMhrHNsXFzcv87Nv4yLi/t8blL8jD9dTW6212q4uLgNbt6l3Pe8pb+Li4s7xb2Ka66kWbVwcXHPcPOAMh6dVhOg1v/i4uJu5naKkOpv++UTLi7uSe5c8zQ/zNw1jtuMDBcX9wi3/8f5m/HhP6RNuLi4R7hzxUln+NoJiLi4uN/lVkeeywJTtXWCi4u7gVtFJGVSErCSIBg1THFxcTdwq1em5q5T5OlOFPhwcXGPcDtXtfI0aFWrBRcX9wy3k8qMk5vOntuduLi4B7l5KpM3NOcudkT3yHBxcY9w+4lI3hCpjlVwcXGfxs3D0IKKKp/24OLibuNexTX+aOdqV3RUXFzcI9x+ezQvhKpD3FZ/FxcXt83tpC+dIFUtjXBxcc9z80CTB525wcyyWg0XF/dL3MlxSDF5wsXF/a/cTu21LMXBxcUtcjtXuvNEJx+9LKjVcHFxG9y55mbSCklCZD9Q4uLiLuX+AAoaUsE+QyT3AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

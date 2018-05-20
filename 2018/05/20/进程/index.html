@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>进程 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,操作系统,process,Operting System">
+    <meta name="description" content="进程的状态： New. The process is being created. Running. Instructions are being executed. Waiting. The process is waiting for some event to occur (such as an I/O           completion or reception of a signa">
+<meta name="keywords" content="Note,操作系统,process,Operting System">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/进程/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="进程的状态： New. The process is being created. Running. Instructions are being executed. Waiting. The process is waiting for some event to occur (such as an I/O           completion or reception of a signa">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519435567265.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519436269757.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519482975976.jpg">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.939Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程">
+<meta name="twitter:description" content="进程的状态： New. The process is being created. Running. Instructions are being executed. Waiting. The process is waiting for some event to occur (such as an I/O           completion or reception of a signa">
+<meta name="twitter:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519435567265.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">进程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">进程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.938Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#IPC-跨进程通讯"><span class="post-toc-number">1.</span> <span class="post-toc-text">IPC 跨进程通讯</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#shared-memory"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">shared memory</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#message-passing"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">message passing</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#直接通信、间接通信"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">直接通信、间接通信</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#同步方式"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">同步方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缓冲方式"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">缓冲方式</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-进程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">进程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.938Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>进程的状态：</strong></p>
+<pre><code>New. The process is being created.
+Running. Instructions are being executed.
+Waiting. The process is waiting for some event to occur (such as an I/O
+          completion or reception of a signal).
+Ready. The process is waiting to be assigned to a processor.
+Terminated. The process has finished execution.
+</code></pre><p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519435567265.jpg" alt="进程状态"></p>
+<p><strong>Process Control Block 进程控制块</strong></p>
+<p>包含内容：<br>1.进程状态<br>2.程序计数器<br>3.CPU寄存器<br>4.CPU调度信息：进程优先级，调度队列指针等<br>5.内存管理信息：根据操作系统内存管理方式，可能包含base ，limit寄存器或者页表等信息。<br>6.台帐信息：CPU使用时间，进程数量等。<br>7.IO状态信息：分配的IO设备，打开的文件等。</p>
+<p><strong>Scheduling Queues 调度队列</strong></p>
+<p>Ready Queue:<em>内存中</em> 等待执行的进程队列。</p>
+<p>Device Queue：等待特定IO设备的进程队列。</p>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519436269757.jpg" alt="调度队列"></p>
+<p><strong>Scheduler 调度器</strong></p>
+<p>进程在执行过程中在各个调度队列间迁移。调度器负责这个迁移过程。</p>
+<p>调度器分类：</p>
+<ol>
+<li>长期调度器：如在批处理系统中，大量的进程被存储在大容量存储设备上，长期调度器从这些进程中选择。<br>2.短期调度器(CPU 调度器)：从内存中的进程选择进行调度。两次调度间隔很短，小于100ms。<br>3.中期调度器：会牺牲多任务能力，将进程置换到外存。</li>
+</ol>
+<p>IO bound process:花费在IO上的时间多于CPU<br>CPU bound process:花费在CPU的时间多于IO</p>
+<p><strong>Context Switch 上下文切换</strong></p>
+<p>高度依赖硬件支持。</p>
+<p><strong>父进程与子进程</strong></p>
+<p><strong>进程创建</strong></p>
+<p>子进程可能从操作系统直接获得资源，或继承部分父进程资源。</p>
+<p>创建子进程后可能：1.父子并发运行 2.父进程等待子进程结束。</p>
+<p>子进程地址空间可能变化：1.父进程的复制 2.加载新程序 （exec）</p>
+<p><strong>进程终结</strong></p>
+<p>exit(status)返回值。<br>pid = wait(&amp;status) 收集返回值。</p>
+<p><strong>Cacading Termination 级联终止</strong><br>终止一个进程将会终止其下所以子进程。</p>
+<p><strong>Zombie Process 僵尸进程</strong><br>未被父进程用wait()收集的进程。在未被wait之前，该进程的exit status一直保存在进程表中。</p>
+<p><strong>Orphan Process 孤儿进程</strong><br>父进程终结，而未被终结的进程。Linux，Unix会将Orphan 赋给init进程，init进程会周期性地调用wait收集终结进程状态。</p>
+<p><strong>独立进程、协作进程</strong><br>独立进程无法影响，或被操作系统内的其他进程影响。进程协作需要IPC（interprocess communication）。</p>
+<p>Chrome 多进程设计<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1519482975976.jpg" alt="Chrome浏览器"></p>
+<h1 id="IPC-跨进程通讯"><a href="#IPC-跨进程通讯" class="headerlink" title="IPC 跨进程通讯"></a><strong>IPC 跨进程通讯</strong></h1><p>1.shared memory<br>2.message passing</p>
+<h2 id="shared-memory"><a href="#shared-memory" class="headerlink" title="shared memory"></a><strong>shared memory</strong></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// common part</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER SIZE 10</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">...</span><br><span class="line">&#125;item;</span><br><span class="line">item buffer[BUFFER SIZE];</span><br><span class="line"><span class="keyword">int</span> in = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> out = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// producer</span></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line"><span class="comment">/* produce an item in next produced */</span></span><br><span class="line">    <span class="keyword">while</span> (((in + <span class="number">1</span>) % BUFFER SIZE) == out)</span><br><span class="line">    ; <span class="comment">/* do nothing */</span></span><br><span class="line">    buffer[in] = next produced;</span><br><span class="line">    in = (in + <span class="number">1</span>) % BUFFER SIZE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer</span></span><br><span class="line">item next consumed;</span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">while</span> (in == out)</span><br><span class="line">    ; <span class="comment">/* do nothing */</span></span><br><span class="line">    next consumed = buffer[out];</span><br><span class="line">    out = (out + <span class="number">1</span>) % BUFFER SIZE;</span><br><span class="line">    <span class="comment">/* consume the item in next consumed */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="message-passing"><a href="#message-passing" class="headerlink" title="message passing"></a><strong>message passing</strong></h2><ul>
+<li>Direct or indirect communication 通信方式</li>
+<li>Synchronous or asynchronous communication 同步方式</li>
+<li>Automatic or explicit buffering 缓冲方式</li>
+</ul>
+<h3 id="直接通信、间接通信"><a href="#直接通信、间接通信" class="headerlink" title="直接通信、间接通信"></a>直接通信、间接通信</h3><p>直接通信：</p>
+<p>对称式<br>send(P, message)—Send a message to process P.<br>receive(Q, message)—Receive a message from process Q</p>
+<p>不对称式：<br>send(P, message)—Send a message to process P.<br>receive(id, message)—Receive a message from any process. The<br>variable id is set to the name of the process with which communication<br>has taken place.</p>
+<p>两种方法的缺点都是需要硬编码进程号。</p>
+<p>间接通信</p>
+<p>进程间通过邮箱mailbox或端口port通信。</p>
+<p>区别于直接通信：一个通信链路可能关联多个进程。两个进程之间可能有多个通信链路（mailbox）。</p>
+<p>send(A, message)—Send a message to mailbox A.<br>receive(A, message)—Receive a message from mailbox A.</p>
+<p>一个邮箱mailbox可能被一个进程拥有（即在该进程的地址空间）或者被操作系统拥有。邮箱拥有者接收信息。在操作系统拥有情况下，创建该邮箱的进程拥有该邮箱，邮箱所有权可以转移。</p>
+<h3 id="同步方式"><a href="#同步方式" class="headerlink" title="同步方式"></a>同步方式</h3><p>阻塞式、非阻塞式（也称同步、异步）</p>
+<p>阻塞式<br>发：发送进程等接收进程接或邮箱收到信息才停止阻塞。<br>收：接收到信息才停止阻塞。</p>
+<p>非阻塞式：<br>发：发送消息，恢复执行。<br>收：接收到消息或者null。</p>
+<h3 id="缓冲方式"><a href="#缓冲方式" class="headerlink" title="缓冲方式"></a>缓冲方式</h3><p>无论直接、间接通信都需要临时队列缓冲数据。</p>
+<ul>
+<li>0 容量：发送方必须阻塞直到对方接收。</li>
+<li>有限长度容量：发送方在full满时会阻塞。</li>
+<li>无限长度容量：发送方永不阻塞。</li>
+</ul>
+<p>windows 的ALPC(Advanced Local Procedure Call)实现IPC。</p>
+<p>C/S 系统通信方式：</p>
+<ol>
+<li>shared memory</li>
+<li>message passing</li>
+<li>sockets</li>
+<li>RPC(remote procedure call)</li>
+<li>Pipe</li>
+</ol>
+<p><strong>RPC</strong><br>相比于IPC，RPC具有消息结构，消息发送到对应端口，内容包括需要调用的函数，以及参数，该参数会如期调用，结果将会以消息形式返回。RPC服务将绑定在端口上。为了使进程像LPC一样调用RPC，客户端会提供stub。windows上stub 代码Microsoft Interface Definition Language(MIDL)。<br>external data representation确定传输数据格式.</p>
+<p>困难1：如何保证RPC只执行一次。<br>在消息上附加时间戳，服务端保存RPC的调用历史，每次核对时间戳，如果不重复则调用。同时，服务端返回ACK保证只执行一次。</p>
+<p>困难2：如何绑定RPC<br>方法1.在编译时绑定服务端端口，固定端口。<br>方法2.服务端操作系提供汇合机制，服务端提供rendezvous (also called a matchmaker) daemon，该进程固定端口。客户端发送RPC请求到该端口，该端口返回RPC端口号。</p>
+<p><strong>Pipe</strong></p>
+<p>1.单向管道、双向管道<br>2.如果双向，是全双工还是半双工<br>3.两个进程之间是否必须为父子关系<br>4.是否可以跨网络通信</p>
+<p>1.普通管道 Orinary Pipe<br>  单向，父子进程。<br>  unix <code>pipe(int fd[])</code> windows <code>CreatePipe()</code></p>
+<p>2.命名管道 Named Pie<br>  双向，非父子进程。进程终结后依然存在。<br>  unix上被称作FIFO <code>mkfifo()</code>双向，半双工。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.939Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/进程/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/进程/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Operting-System/">Operting System</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/process/">process</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/进程/&title=《进程》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/进程/&title=《进程》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/进程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进程》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/进程/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/进程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/sqlmap指南/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">sqlmap 指南</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/虚拟存储技术/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">虚拟存储技术</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/进程/&title=《进程》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/进程/&title=《进程》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/进程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进程》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/进程/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/进程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3aMW7DMBAEQP//00qbRvQuadIyMKqCWDZHKg68Pb5e8XXdXP8/vbtzfM9rx4WLi7vMvYbXeIFk4TE6N+Di4p7n5suMH3Xl/2MDLi7u87njojYufO3rwMXF/S1uDhp/FxcX95ncueAjf5i8ufpYr4aLi7vAzVPKfX9vyXdxcXGnuFd5tUXt+uiFi4t7hpsXlLmRyVxr9GZdXFzcI9yVIUdbthJo1Pzg4uJu485R8q1Me2wr2pHh4uJ+iduGmAkx3wzd/houLu4Rbt6otLllC81fBC4u7m5u0hXl97Slqh3b4OLinuG2cWceoeYNT9t04eLi7ubm25TxT+cBR36k47ZXw8XF3cydCzTbkLQd27x5Wbi4uEe46wc02ybnzfLtnbi4uBu4c4FFEqHODWaKc2S4uLhHuCtRad7MrBzgwMXFPc+dK0NteVraheHi4m7mzi2ftzd5FFv0ZLi4uJu5bXFJNivtmDZ/bFxc3JPcueLVHryYewW4uLjf5c5FHu1wNKmgxUwYFxf3Mdx2lNKWsyLFwcXFfQw3H4q0m55IiIuLe5C7Hm62AetkaIKLi3uEuzL4LOKM4FufKny4uLgL3D89+NhXa2UKuQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

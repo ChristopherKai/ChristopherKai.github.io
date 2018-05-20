@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>编译原理简述 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,Compiler">
+    <meta name="description" content="编译器的三个阶段：1.Parsing 对源代码解析成为源语言的AST 2.Tranformation 将源语言AST转为目标语言AST 3.Code Generation 从目标语言AST生成目标语言代码 总结：Source Code  —-tokenizer———&amp;gt;  tokens —-parser————&amp;gt;   source code AST —–transformer——&amp;gt;">
+<meta name="keywords" content="Note,Compiler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理简述">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/编译原理简述/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="编译器的三个阶段：1.Parsing 对源代码解析成为源语言的AST 2.Tranformation 将源语言AST转为目标语言AST 3.Code Generation 从目标语言AST生成目标语言代码 总结：Source Code  —-tokenizer———&amp;gt;  tokens —-parser————&amp;gt;   source code AST —–transformer——&amp;gt;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.937Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译原理简述">
+<meta name="twitter:description" content="编译器的三个阶段：1.Parsing 对源代码解析成为源语言的AST 2.Tranformation 将源语言AST转为目标语言AST 3.Code Generation 从目标语言AST生成目标语言代码 总结：Source Code  —-tokenizer———&amp;gt;  tokens —-parser————&amp;gt;   source code AST —–transformer——&amp;gt;">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">编译原理简述</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">编译原理简述</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.936Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#编译器的三个阶段："><span class="post-toc-number">1.</span> <span class="post-toc-text">编译器的三个阶段：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Parsing"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Parsing</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Lexical-Analysis"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">Lexical Analysis</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Syntax-Analysis"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">Syntax Analysis</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Transforming"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Transforming</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Code-Generation"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">Code Generation</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-编译原理简述"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">编译原理简述</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.936Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="编译器的三个阶段："><a href="#编译器的三个阶段：" class="headerlink" title="编译器的三个阶段："></a>编译器的三个阶段：</h1><pre><code>1.Parsing 对源代码解析成为源语言的AST
+2.Tranformation 将源语言AST转为目标语言AST
+3.Code Generation 从目标语言AST生成目标语言代码
+</code></pre><p>总结：<br><strong>Source Code</strong> </p>
+<p>—-tokenizer———&gt; </p>
+<p><strong>tokens</strong></p>
+<p>—-parser————&gt;  </p>
+<p><strong>source code AST</strong></p>
+<p>—–transformer——&gt; </p>
+<p><strong>taget language AST</strong> </p>
+<p>—Code generator—–&gt;  </p>
+<p><strong>Target Code</strong></p>
+<h2 id="Parsing"><a href="#Parsing" class="headerlink" title="Parsing"></a>Parsing</h2><p>分为两个阶段：</p>
+<ol>
+<li>Lexical Analysis</li>
+<li>Syntax Analysis</li>
+</ol>
+<h3 id="Lexical-Analysis"><a href="#Lexical-Analysis" class="headerlink" title="Lexical Analysis"></a>Lexical Analysis</h3><p>将源代码解析为token数组，如标签label，符号+-*/，数字等。</p>
+<h3 id="Syntax-Analysis"><a href="#Syntax-Analysis" class="headerlink" title="Syntax Analysis"></a>Syntax Analysis</h3><p>将这个token数组重新组合，形成一个能够表示其内在联系的数据结构，叫做AST(Abstract Syntax Tree)。</p>
+<h2 id="Transforming"><a href="#Transforming" class="headerlink" title="Transforming"></a>Transforming</h2><p>Lisp：<code>(add 2 (substract 4 2))</code><br>C：<code>add(2, substract(4,2))</code><br>从语言Lisp到类C语言。<br>Lisp一上来就是Call表达式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">* ----------------------------------------------------------------------------</span><br><span class="line"> *   &#123;                                |   &#123;</span><br><span class="line"> *     type: <span class="string">'Program'</span>,               |     type: <span class="string">'Program'</span>,</span><br><span class="line"> *     body: [&#123;                       |     body: [&#123;</span><br><span class="line"> *       type: <span class="string">'CallExpression'</span>,      |       type: <span class="string">'ExpressionStatement'</span>,</span><br><span class="line"> *       name: <span class="string">'add'</span>,                 |       expression: &#123;</span><br><span class="line"> *       params: [&#123;                   |         type: <span class="string">'CallExpression'</span>,</span><br><span class="line"> *         type: <span class="string">'NumberLiteral'</span>,     |         callee: &#123;</span><br><span class="line"> *         value: <span class="string">'2'</span>                 |           type: <span class="string">'Identifier'</span>,</span><br><span class="line"> *       &#125;, &#123;                         |           name: <span class="string">'add'</span></span><br><span class="line"> *         type: <span class="string">'CallExpression'</span>,    |         &#125;,</span><br><span class="line"> *         name: <span class="string">'subtract'</span>,          |         <span class="built_in">arguments</span>: [&#123;</span><br><span class="line"> *         params: [&#123;                 |           type: <span class="string">'NumberLiteral'</span>,</span><br><span class="line"> *           type: <span class="string">'NumberLiteral'</span>,   |           value: <span class="string">'2'</span></span><br><span class="line"> *           value: <span class="string">'4'</span>               |         &#125;, &#123;</span><br><span class="line"> *         &#125;, &#123;                       |           type: <span class="string">'CallExpression'</span>,</span><br><span class="line"> *           type: <span class="string">'NumberLiteral'</span>,   |           callee: &#123;</span><br><span class="line"> *           value: <span class="string">'2'</span>               |             type: <span class="string">'Identifier'</span>,</span><br><span class="line"> *         &#125;]                         |             name: <span class="string">'subtract'</span></span><br><span class="line"> *       &#125;]                           |           &#125;,</span><br><span class="line"> *     &#125;]                             |           <span class="built_in">arguments</span>: [&#123;</span><br><span class="line"> *   &#125;                                |             type: <span class="string">'NumberLiteral'</span>,</span><br><span class="line"> *                                    |             value: <span class="string">'4'</span></span><br><span class="line"> * ---------------------------------- |           &#125;, &#123;</span><br><span class="line"> *                                    |             type: <span class="string">'NumberLiteral'</span>,</span><br><span class="line"> *                                    |             value: <span class="string">'2'</span></span><br><span class="line"> *                                    |           &#125;]</span><br><span class="line"> *  (sorry the other one is longer.)  |         &#125;</span><br><span class="line"> *                                    |       &#125;</span><br><span class="line"> *                                    |     &#125;]</span><br><span class="line"> *                                    |   &#125;</span><br><span class="line"> * ----------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<h3 id="Code-Generation"><a href="#Code-Generation" class="headerlink" title="Code Generation"></a>Code Generation</h3><p>从目标语言AST转为目标语言。</p>
+<p>参考自youtube视频<a href="https://www.youtube.com/watch?v=Tar4WgAfMr4" target="_blank" rel="external">How to Build a Compiler by James Kyle</a><br>参考2：<a href="https://github.com/jamiebuilds/the-super-tiny-compiler/blob/master/the-super-tiny-compiler.js#L161" target="_blank" rel="external">超小编译器</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.937Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/编译原理简述/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/编译原理简述/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/编译原理简述/&title=《编译原理简述》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/编译原理简述/&title=《编译原理简述》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/编译原理简述/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译原理简述》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/编译原理简述/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/编译原理简述/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/虚拟存储技术/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">虚拟存储技术</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/线程/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">线程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/编译原理简述/&title=《编译原理简述》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/编译原理简述/&title=《编译原理简述》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/编译原理简述/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《编译原理简述》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/编译原理简述/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/编译原理简述/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aSW7DMAwFUN//0i3QVYHWzifpFLX0vDIyWHoJQHDQccTXx9f1/b53nT3t55OPd1wYGBiPZfQWTj5/7ytna2FgYOzDmAfZ6+9er5iE4xd7xsDAwAgSuF4AzdfFwMDAqAbcpJZM3k3YGBgYGNWitFBYXn43Z9xci2NgYDyQ0RsM/M392+cbGBgY/57RG0DONzEZPPyyKwwMjKUZeeO+muRVm3TVht2R1LUYGBgLMfIxQHUYUH1m8krhP8HAwFia0Tt4cVdzrTdYxcDAWJWRhNHk3d54IB9/Rv8ABgbGoow8mbu39J3ATneIgYGxJaO3ueoBjsmhCgwMjB0YkxZ/77RDrz9WnsRiYGAsx8gPhFWDY97orw5BMTAw9mT0Boe9oWY+DIiKWwwMjG0YzbRsUNAewRUNLTAwMLZn3HV0LH9CcySAgYGxKKOa5PVCZG+t6hEQDAyMtRlJIOsd58pTw94AFQMDYx9GNWmrNuCqIXXyg2JgYKzH6IW/3mGvJFms7gcDA2MfRt4+q8byXsssb9sVJrEYGBiPZVQfnbfbqkVvr6mHgYGxA+OjeFVbadXvNgeiGBgYSzPuGkxOAHc1/jAwMNZm9Jpo5clD6+BFIbxiYGBswEgC33UC10vabvskBgYGxvg+SfJGRTUGBgbGoD7OB6X5MdYX8w0MDIxFGXmLP1+4is+L59OAi4GBsSijWkBONjRPE0ezDgwMjOcxPgHAZ3+t4+oY7gAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>c笔记 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,C">
+    <meta name="description" content="123456789101112131415161718192021222324252627282930313233343536373839404142struct swap_manager&amp;#123;     const char *name;     /* Global initialization for the swap manager */     int (*init)">
+<meta name="keywords" content="Note,C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c笔记">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/c笔记/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="123456789101112131415161718192021222324252627282930313233343536373839404142struct swap_manager&amp;#123;     const char *name;     /* Global initialization for the swap manager */     int (*init)">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.930Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c笔记">
+<meta name="twitter:description" content="123456789101112131415161718192021222324252627282930313233343536373839404142struct swap_manager&amp;#123;     const char *name;     /* Global initialization for the swap manager */     int (*init)">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">c笔记</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">c笔记</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.930Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-c笔记"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">c笔记</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.930Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">swap_manager</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">     <span class="keyword">const</span> <span class="keyword">char</span> *name;</span><br><span class="line">     <span class="comment">/* Global initialization for the swap manager */</span></span><br><span class="line">     <span class="keyword">int</span> (*init)            (<span class="keyword">void</span>);</span><br><span class="line">     <span class="comment">/* Initialize the priv data inside mm_struct */</span></span><br><span class="line">     <span class="keyword">int</span> (*init_mm)         (struct mm_struct *mm);</span><br><span class="line">     <span class="comment">/* Called when tick interrupt occured */</span></span><br><span class="line">     <span class="keyword">int</span> (*tick_event)      (struct mm_struct *mm);</span><br><span class="line">     <span class="comment">/* Called when map a swappable page into the mm_struct */</span></span><br><span class="line">     <span class="keyword">int</span> (*map_swappable)   (struct mm_struct *mm, <span class="keyword">uintptr_t</span> addr, struct Page *page, <span class="keyword">int</span> swap_in);</span><br><span class="line">     <span class="comment">/* When a page is marked as shared, this routine is called to</span></span><br><span class="line"><span class="comment">      * delete the addr entry from the swap manager */</span></span><br><span class="line">     <span class="keyword">int</span> (*set_unswappable) (struct mm_struct *mm, <span class="keyword">uintptr_t</span> addr);</span><br><span class="line">     <span class="comment">/* Try to swap out a page, return then victim */</span></span><br><span class="line">     <span class="keyword">int</span> (*swap_out_victim) (struct mm_struct *mm, struct Page **ptr_page, <span class="keyword">int</span> in_tick);</span><br><span class="line">     <span class="comment">/* check the page relpacement algorithm */</span></span><br><span class="line">     <span class="keyword">int</span> (*check_swap)(<span class="keyword">void</span>);     </span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//可以多种实现。</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">swap_manager</span> <span class="title">swap_manager_fifo</span> =</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">     .name            = <span class="string">"fifo swap manager"</span>,</span><br><span class="line">     .init            = &amp;_fifo_init,</span><br><span class="line">     .init_mm         = &amp;_fifo_init_mm,</span><br><span class="line">     .tick_event      = &amp;_fifo_tick_event,</span><br><span class="line">     .map_swappable   = &amp;_fifo_map_swappable,</span><br><span class="line">     .set_unswappable = &amp;_fifo_set_unswappable,</span><br><span class="line">     .swap_out_victim = &amp;_fifo_swap_out_victim,</span><br><span class="line">     .check_swap      = &amp;_fifo_check_swap,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">swap_manager</span> <span class="title">swap_manager_clock</span> =</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">     .name            = <span class="string">"clock swap manager"</span>,</span><br><span class="line">     .init            = &amp;_clock_init,</span><br><span class="line">     .init_mm         = &amp;_clock_init_mm,</span><br><span class="line">     .tick_event      = &amp;_clock_tick_event,</span><br><span class="line">     .map_swappable   = &amp;_clock_map_swappable,</span><br><span class="line">     .set_unswappable = &amp;_clock_set_unswappable,</span><br><span class="line">     .swap_out_victim = &amp;_clock_swap_out_victim,</span><br><span class="line">     .check_swap      = &amp;_clock_check_swap,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>链表<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> *<span class="title">prev</span>, *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list_entry</span> <span class="title">list_entry_t</span>;</span></span><br><span class="line"></span><br><span class="line">list_init(<span class="keyword">list_entry_t</span> *elm) &#123;</span><br><span class="line">    elm-&gt;prev = elm-&gt;next = elm;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">list_add_before(<span class="keyword">list_entry_t</span> *listelm, <span class="keyword">list_entry_t</span> *elm) &#123;</span><br><span class="line">    __list_add(elm, listelm-&gt;prev, listelm);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">__list_add(<span class="keyword">list_entry_t</span> *elm, <span class="keyword">list_entry_t</span> *prev, <span class="keyword">list_entry_t</span> *next) &#123;</span><br><span class="line">    prev-&gt;next = next-&gt;prev = elm;</span><br><span class="line">    elm-&gt;next = next;</span><br><span class="line">    elm-&gt;prev = prev;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用，嵌入需要使用链表的数据结构</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> ref;                        <span class="comment">// page frame's reference counter</span></span><br><span class="line">    <span class="keyword">uint32_t</span> flags;                 <span class="comment">// array of flags that describe the status of the page frame</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> property;          <span class="comment">// the num of free block, used in first fit pm manager</span></span><br><span class="line">    <span class="keyword">list_entry_t</span> page_link;         <span class="comment">// free list link</span></span><br><span class="line">    <span class="keyword">list_entry_t</span> pra_page_link;     <span class="comment">// used for pra (page replace algorithm)</span></span><br><span class="line">    <span class="keyword">uintptr_t</span> pra_vaddr;            <span class="comment">// used for pra (page replace algorithm)</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 转为链表项</span></span><br><span class="line"><span class="keyword">list_entry_t</span> *entry=&amp;(page-&gt;pra_page_link);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 转为包含数据结构</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> le2page(le, member)                 \</span></span><br><span class="line">    to_struct((le), struct Page, member)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* *</span></span><br><span class="line"><span class="comment"> * to_struct - get the struct from a ptr</span></span><br><span class="line"><span class="comment"> * @ptr:    a struct pointer of member</span></span><br><span class="line"><span class="comment"> * @type:   the type of the struct this is embedded in</span></span><br><span class="line"><span class="comment"> * @member: the name of the member within the struct</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> to_struct(ptr, type, member)                               \</span></span><br><span class="line">    ((type *)((<span class="keyword">char</span> *)(ptr) - offsetof(type, member)))</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> offsetof(type, member)                                      \</span></span><br><span class="line">    ((<span class="keyword">size_t</span>)(&amp;((type *)<span class="number">0</span>)-&gt;member))</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> *<span class="title">p</span> = <span class="title">le2page</span>(<span class="title">le</span>, <span class="title">pra_page_link</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// （int *func(uint32_t[])）函数数组</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="title">int</span> <span class="params">(*syscalls[])</span><span class="params">(<span class="keyword">uint32_t</span> arg[])</span> </span>= &#123;</span><br><span class="line">    [SYS_exit]              sys_exit,</span><br><span class="line">    [SYS_fork]              sys_fork,</span><br><span class="line">    [SYS_wait]              sys_wait,</span><br><span class="line">    [SYS_exec]              sys_exec,</span><br><span class="line">    [SYS_yield]             sys_yield,</span><br><span class="line">    [SYS_kill]              sys_kill,</span><br><span class="line">    [SYS_getpid]            sys_getpid,</span><br><span class="line">    [SYS_putc]              sys_putc,</span><br><span class="line">    [SYS_pgdir]             sys_pgdir,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">syscall(<span class="keyword">void</span>) &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">trapframe</span> *<span class="title">tf</span> = <span class="title">current</span>-&gt;<span class="title">tf</span>;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> arg[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span> num = tf-&gt;tf_regs.reg_eax;</span><br><span class="line">    <span class="keyword">if</span> (num &gt;= <span class="number">0</span> &amp;&amp; num &lt; NUM_SYSCALLS) &#123;</span><br><span class="line">        <span class="keyword">if</span> (syscalls[num] != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            arg[<span class="number">0</span>] = tf-&gt;tf_regs.reg_edx;</span><br><span class="line">            arg[<span class="number">1</span>] = tf-&gt;tf_regs.reg_ecx;</span><br><span class="line">            arg[<span class="number">2</span>] = tf-&gt;tf_regs.reg_ebx;</span><br><span class="line">            arg[<span class="number">3</span>] = tf-&gt;tf_regs.reg_edi;</span><br><span class="line">            arg[<span class="number">4</span>] = tf-&gt;tf_regs.reg_esi;</span><br><span class="line">            tf-&gt;tf_regs.reg_eax = syscalls[num](arg);</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    print_trapframe(tf);</span><br><span class="line">    panic(<span class="string">"undefined syscall %d, pid = %d, name = %s.\n"</span>,</span><br><span class="line">            num, current-&gt;pid, current-&gt;name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.930Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/c笔记/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/c笔记/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/c笔记/&title=《c笔记》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/c笔记/&title=《c笔记》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/c笔记/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《c笔记》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/c笔记/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/c笔记/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/内存管理/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">内存管理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/SQL注入/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">SQL注入</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/c笔记/&title=《c笔记》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/c笔记/&title=《c笔记》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/c笔记/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《c笔记》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/c笔记/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/c笔记/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzklEQVR42u3aS46EMAwFwL7/pZntSCPCs/NpRqqsUININQvLsf35xOv6s37/fned3128cHFxp7nXcI25vfeM/8DDXri4uAe5d9tXr/MQdvfMgw0XF/fF3DycVT8BLi7uf+Te4XrJEC4u7pu5+aGlWrsY77LxrIaLizvBzbffd72lvouLi9viXsV1t834qLNq4eLinuHmAaVXDM3LInmqhIuLe5I7PpBUCyi990SFFVxc3CPcpExZLVJUxzgKKQ4uLu4R7nzbI7+7IPDh4uIe4faKp72X9g5LuLi457m9RGRmFCM5/ETjF7i4uJu51cZq9ejSa8kU6ru4uLhLuXnykbRRo3ZI63Pg4uKe5OYBpTds0SunFuIuLi7uBm6vaVoemwjOL80ncXFxN3DHASsPZHmbNu/3PsRdXFzczdzekES1bNprq+Di4n6LWx2kqIKqTdxC/oWLi7uUO9MCyYunM2ERFxf3PHd+GKtaKi2MWczMkeHi4k5ze6MSedJTbahMJTq4uLhLufOUfPRqppGDi4v7Tm4+opE3XAvpES4u7ou5vbJp7+y1IJDh4uK2uHmRNC+RVFs10cfCxcU9wq2GkmrxNMlSZobAcHFxl3J/ANEjcbCQxI6aAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

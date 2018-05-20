@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>线程 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Note,Operating System,操作系统">
+    <meta name="description" content="线程包括： 1.线程号  2.寄存器集合 ，包含PC程序计数器 3.Stack,包括User Stack和Kernel Stack 4.私有存储，被运行时库或DLL使用 后三项被称作Thread的Context 线程的好处： 1.响应度。UI线程和费时的计算线程分开，提升响应度。 2.资源共享。进程之间共享只能通过shared memeory或message passing。线程默认共享内存和资源">
+<meta name="keywords" content="Note,Operating System,操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/线程/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="线程包括： 1.线程号  2.寄存器集合 ，包含PC程序计数器 3.Stack,包括User Stack和Kernel Stack 4.私有存储，被运行时库或DLL使用 后三项被称作Thread的Context 线程的好处： 1.响应度。UI线程和费时的计算线程分开，提升响应度。 2.资源共享。进程之间共享只能通过shared memeory或message passing。线程默认共享内存和资源">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.936Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程">
+<meta name="twitter:description" content="线程包括： 1.线程号  2.寄存器集合 ，包含PC程序计数器 3.Stack,包括User Stack和Kernel Stack 4.私有存储，被运行时库或DLL使用 后三项被称作Thread的Context 线程的好处： 1.响应度。UI线程和费时的计算线程分开，提升响应度。 2.资源共享。进程之间共享只能通过shared memeory或message passing。线程默认共享内存和资源">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">线程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">线程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.935Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">线程模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#线程库"><span class="post-toc-number">2.</span> <span class="post-toc-text">线程库</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Implicit-Threading"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Implicit Threading</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#线程池-Thread-Pools"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">线程池 Thread Pools</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#OpenMP"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">OpenMP</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Grand-Central-Dispatch"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">Grand Central Dispatch</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#线程与进程复制"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">线程与进程复制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#信号处理"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">信号处理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#线程取消"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">线程取消</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#线程本地存储"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">线程本地存储</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Scheduler-Activations"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">Scheduler Activations</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#LWP-轻权进程"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">LWP 轻权进程</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-线程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">线程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.935Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <pre><code>线程包括：
+1.线程号 
+2.寄存器集合 ，包含PC程序计数器
+3.Stack,包括User Stack和Kernel Stack
+4.私有存储，被运行时库或DLL使用
+</code></pre><p>后三项被称作Thread的Context</p>
+<p>线程的好处：</p>
+<pre><code>1.响应度。UI线程和费时的计算线程分开，提升响应度。
+2.资源共享。进程之间共享只能通过shared memeory或message passing。线程默认共享内存和资源。
+3.经济。线程的创建与上下文切换相比进程更快。
+4.拓展性（Scalability）。多线程在多核处理器下，可以充分利用处理器。
+</code></pre><p>//多核与多处理器的区别。多核可能在一个芯片上，多处理器则是多个独立的cpu。</p>
+<p><strong>Parallelism vs Concurrency</strong><br>Parallel 表示一个系统可以<strong>同时</strong>运行多个任务。<br>Concurrent表示一个系统可以使多个任务都取得运作。</p>
+<p>在SMP和多核之前，单处理器在进程之间使用快速上下文切换来提供一种parallel的假象。</p>
+<p>并行编程的挑战：<br>    1.identify task。合理分割任务，使并行。<br>    2.balance。各个任务运算平衡。<br>    3.data splitting<br>    4.data dependency<br>    5.test and debug</p>
+<p>//  AMDAHL’S LAW  ???</p>
+<p>并行的分类：<br>1.数据并行。比如两个线程分别求和数组的两半。<br>2.任务并行。</p>
+<h2 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h2><p><strong>多对一</strong></p>
+<p>多个用户线程对应一个内核线程。当一个用户线程进行阻塞系统调用，对应内核线程阻塞，整个进程就会阻塞。缺点：无法利用多核系统实现并行。eg。Solaris的Green Threads.</p>
+<p><strong>一对一</strong></p>
+<p>一个用户线程对应一个内核线程。缺点：因为一对一，系统支持的线程数量会有限制。eg.Linux和windows</p>
+<p><strong>多对多</strong></p>
+<p>内核线程数小于等于用户线程数。优势：线程数无限制，充分利用多核。</p>
+<h2 id="线程库"><a href="#线程库" class="headerlink" title="线程库"></a>线程库</h2><p>两种线程库：<br>1.纯粹在用户空间实现，无内核支持。调用库函数不会发生系统调用。<br>2.在内核空间实现，库的代码数据在内核存在。会发生系统调用。</p>
+<p>三种主流线程库：POSIX Pthreads,Windows,Java。</p>
+<p>Pthreads: 用户、内核<br>Windows：内核<br>Java:取决于宿主系统，在Windows用windows api，Linux/Unix 用Pthreads</p>
+<p>windows ，linux下线程共享全局数据。然而在Java下，没有全局数据的概念，线程间共享数据需要额外的准备。</p>
+<p>线程创建的两种模型：</p>
+<p>1.异步。 创建后，并发执行。通常，数据共享比较少。<br>2.同步。 创建后，父线程等待子线程终止。</p>
+<p>Note.<br>Pthread是POSIX 的一个线程行为标准，具体实现取决于系统设计者。比如Linux,MAC OS，Solaris。</p>
+<p>创建线程</p>
+<p>Linux</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Linux</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> sum; <span class="comment">/* this data is shared by the thread(s) */</span></span><br><span class="line"><span class="comment">// void func(void *)类型的函数指针</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">runner</span><span class="params">(<span class="keyword">void</span> *param)</span></span>; <span class="comment">/* threads call this function */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">pthread_t</span> tid; <span class="comment">/* the thread identifier */</span></span><br><span class="line">    <span class="keyword">pthread_attr_t</span> attr; <span class="comment">/* set of thread attributes */</span></span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"usage: a.out &lt;integer value&gt;\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (atoi(argv[<span class="number">1</span>]) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"%d must be &gt;= 0\n"</span>,atoi(argv[<span class="number">1</span>]));</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* get the default attributes */</span></span><br><span class="line">    pthread_attr_init(&amp;attr);</span><br><span class="line">    <span class="comment">/* create the thread */</span></span><br><span class="line">    pthread_create(&amp;tid,&amp;attr,runner,argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">/* wait for the thread to exit */</span></span><br><span class="line">    pthread_join(tid,<span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sum = %d\n"</span>,sum);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* The thread will begin control in this function */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">runner</span><span class="params">(<span class="keyword">void</span> *param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, upper = atoi(param);</span><br><span class="line">    sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= upper; i++)</span><br><span class="line">        sum += i;   </span><br><span class="line">    <span class="function">pthread <span class="title">exit</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Linux同时提供clone()系统调用创建线程。Linux常用Task来表述一个程序的控制流。当调用clone时附带共享内存等Flags时，等同于创建线程，当没有共享Flags时，等同于fork()创建线程。这样，各种程度的共享是可以实现的，</p>
+<table>
+<thead>
+<tr>
+<th>flag</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLONE_FS</td>
+<td>共享文件系统信息</td>
+</tr>
+<tr>
+<td>CLONE_VM</td>
+<td>共享内存空间</td>
+</tr>
+<tr>
+<td>CLONE_SIGHAND</td>
+<td>共享信号handles</td>
+</tr>
+<tr>
+<td>CLONE_FILES</td>
+<td>共享打开的文件</td>
+</tr>
+</tbody>
+</table>
+<p>Windows</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">\\windows</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">DWORD Sum; <span class="comment">/* data is shared by the thread(s) */</span></span><br><span class="line"><span class="comment">/* the thread runs in this separate function */</span></span><br><span class="line"><span class="function">DWORD WINAPI <span class="title">Summation</span><span class="params">(LPVOID Param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DWORD Upper = *(DWORD*)Param;</span><br><span class="line">    <span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt;= Upper; i++)</span><br><span class="line">        Sum += i;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DWORD ThreadId;</span><br><span class="line">    HANDLE ThreadHandle;</span><br><span class="line">    <span class="keyword">int</span> Param;</span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"An integer parameter is required\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Param = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">if</span> (Param &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"An integer &gt;= 0 is required\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* create the thread */</span></span><br><span class="line">ThreadHandle = CreateThread(</span><br><span class="line">                            <span class="literal">NULL</span>, <span class="comment">/* default security attributes */</span></span><br><span class="line">                            <span class="number">0</span>, <span class="comment">/* default stack size */</span></span><br><span class="line">                            Summation, <span class="comment">/* thread function */</span></span><br><span class="line">                            &amp;Param, <span class="comment">/* parameter to thread function */</span></span><br><span class="line">                            <span class="number">0</span>, <span class="comment">/* default creation flags */</span></span><br><span class="line">                            &amp;ThreadId); <span class="comment">/* returns the thread identifier */</span></span><br><span class="line"><span class="keyword">if</span> (ThreadHandle != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="comment">/* now wait for the thread to finish */</span></span><br><span class="line">    WaitForSingleObject(ThreadHandle,INFINITE);</span><br><span class="line">    <span class="comment">/* close the thread handle */</span></span><br><span class="line">    CloseHandle(ThreadHandle);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"sum = %d\n"</span>,Sum);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JAVA</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//JAVA</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sum</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> sum;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSum</span><span class="params">(<span class="keyword">int</span> sum)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sum = sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Summation</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> upper;</span><br><span class="line">    <span class="keyword">private</span> Sum sumValue;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Summation</span><span class="params">(<span class="keyword">int</span> upper, Sum sumValue)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.upper = upper;</span><br><span class="line">        <span class="keyword">this</span>.sumValue = sumValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= upper; i++)</span><br><span class="line">            sum += i;</span><br><span class="line">        sumValue.setSum(sum);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (args.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (Integer.parseInt(args[<span class="number">0</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">                System.err.println(args[<span class="number">0</span>] + <span class="string">" must be &gt;= 0."</span>);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                Sum sumObject = <span class="keyword">new</span> Sum();</span><br><span class="line">                <span class="keyword">int</span> upper = Integer.parseInt(args[<span class="number">0</span>]);</span><br><span class="line">                Thread thrd = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Summation(upper, sumObject));</span><br><span class="line">                thrd.start();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    thrd.join();</span><br><span class="line">                    System.out.println</span><br><span class="line">                    (<span class="string">"The sum of "</span>+upper+<span class="string">" is "</span>+sumObject.getSum());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException ie) &#123; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            System.err.println(<span class="string">"Usage: Summation &lt;integer value&gt;"</span>); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Implicit-Threading"><a href="#Implicit-Threading" class="headerlink" title="Implicit Threading"></a>Implicit Threading</h3><p>Implicit Threading:将进程的创建与管理交给编译器与运行时库。</p>
+<p>方法:<br>1.Thread Pools<br>2.OpenMP<br>3.GCD<br>4..</p>
+<h4 id="线程池-Thread-Pools"><a href="#线程池-Thread-Pools" class="headerlink" title="线程池 Thread Pools"></a>线程池 Thread Pools</h4><p>理念：在进程创建时初始化一定数量的线程，并置于线程池。当需要线程，从线程池激活一个线程，并工作，等其完成则返回线程池等待新的工作。如果线程池没有空闲线程，则等待。</p>
+<p>好处：<br>1.响应请求速度提升，已经创建好的线程比新创建线程速度快。<br>2.限制了线程数量，防止超过系统承受。</p>
+<p>windows<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">DWORD WINAPI <span class="title">PoolFunction</span><span class="params">(AVOID Param)</span> </span>&#123;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* this function runs as a separate thread.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">QueueUserWorkItem(&amp;PoolFunction, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<h4 id="OpenMP"><a href="#OpenMP" class="headerlink" title="OpenMP"></a>OpenMP</h4><p>OpenMP是一套支持C/C++，FORTRAN 并行编程的编译器伪指令，api。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/* sequential code */</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"I am a parallel region."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* sequential code */</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Grand-Central-Dispatch"><a href="#Grand-Central-Dispatch" class="headerlink" title="Grand Central Dispatch"></a>Grand Central Dispatch</h4><p>MAC OS X与iOS。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ˆ&#123; <span class="built_in">printf</span>(<span class="string">"I am a block"</span>); &#125;</span><br></pre></td></tr></table></figure>
+<p>Note.<br>POSIX是一套api标准，遵循此标准的操作系统为POSIX操作系统，The Portable Operating System Interface。</p>
+<p>链接：<br>[POSIX api1][1]<br>[POSIX api2][2]<br>[标准C库][3]</p>
+<h3 id="线程与进程复制"><a href="#线程与进程复制" class="headerlink" title="线程与进程复制"></a>线程与进程复制</h3><p>fork()在多线程下，有可能复制所有线程，或只复制调用fork()的线程。如果fork()后会exec()则调用后者，即只复制单一线程比较经济。否则，前者更为适用。</p>
+<p>exec()在多线程下，直接替换整个进程，包括所有线程。</p>
+<h3 id="信号处理"><a href="#信号处理" class="headerlink" title="信号处理"></a>信号处理</h3><p>Unix下，信号用于通知进程特定事件发生了。取决于信号源或信号发送原因，信号是同步或者异步的。</p>
+<p>信号必须被处理。</p>
+<p>同步信号:异常内存访问，除0错误等。</p>
+<p>异步信号：由进程外部事件产生，比如ctrl +C.</p>
+<p>信号到底应该发送给特定线程还是所有线程，取决于信号种类。</p>
+<p><code>kill(pid_t pid, int signal)</code>Unix发送信号<code>pthread_kill(pthread_t tid, int signal)</code></p>
+<p>Windows用asynchronous procedure calls (APC)模拟异步信号。</p>
+<h3 id="线程取消"><a href="#线程取消" class="headerlink" title="线程取消"></a>线程取消</h3><p>目标线程(target thread):要被取消的线程</p>
+<p>取消方式：<br>1.异步：一个线程立即取消目标线程<br>2.延期的(deferred)：目标线程周期性检查是否应该终结，给其一个可以稍晚取消的机会。</p>
+<p>线程取消的难点在于目标线程存在与其他线程共享的资源</p>
+<p>POSIX<code>pthread_create(&amp;tid, 0, worker, NULL);</code>只是发起取消请求，具体如何取消，取决于线程的handle。</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>State</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Off</td>
+<td>Disabled</td>
+<td>-</td>
+</tr>
+<tr>
+<td>异步</td>
+<td>Enabled</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>延期</td>
+<td>Enabled</td>
+<td>延期</td>
+</tr>
+</tbody>
+</table>
+<p>默认类型为“延期”，到达取消点(cancellation point)的时候，会被取消。<br><code>pthread_testcancel()</code>用于测试取消点。在取消之前cleanup handler函数会被调用以释放分配的资源。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line"><span class="comment">/* do some work for awhile */</span></span><br><span class="line"><span class="comment">/* ... */</span></span><br><span class="line"><span class="comment">/* check if there is a cancellation request */</span></span><br><span class="line">	pthread_testcancel();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="线程本地存储"><a href="#线程本地存储" class="headerlink" title="线程本地存储"></a>线程本地存储</h3><p>在特定情况下，线程需要私有的数据，即Thread Local Storage.TLS不同于局部变量，后者只函数内存在。TLS有点类似static变量，但是TLS对线程唯一。</p>
+<h3 id="Scheduler-Activations"><a href="#Scheduler-Activations" class="headerlink" title="Scheduler Activations"></a>Scheduler Activations</h3><p>//TODO ????</p>
+<h3 id="LWP-轻权进程"><a href="#LWP-轻权进程" class="headerlink" title="LWP 轻权进程"></a>LWP 轻权进程</h3><p>//TODO</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.936Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/线程/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/线程/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Note/">Note</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Operating-System/">Operating System</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/线程/&title=《线程》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/线程/&title=《线程》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/线程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《线程》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/线程/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/线程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/编译原理简述/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">编译原理简述</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/用Python写一个超简单的静态网站服务器/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">用Python写一个超简单的静态网站服务器</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/线程/&title=《线程》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/线程/&title=《线程》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/线程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《线程》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/线程/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/线程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzUlEQVR42u3aMW7DMAwF0Nz/0inQKUBR+VNUaA9PU5A41rMHgiL5esXr/bvWnz+/+Vz//evvf48tXFzcNve9XMlmCSW5//oaXFzceW4SvJIr15EneeCLO+Pi4j6Mm1y/DkN798TFxX0yd739KTouLu5zuPnhpLplNek5dlbDxcVtcE8VTDufb6jv4uLibnUlqsXNdahap03R7ri4uCPcdaM0OYrkiUhOvwhzuLi4I9xqQaQfjPLWS4TGxcU9yj01z5Xc50DIw8XFHeFWy5f5BnmYy0c0cHFx7+LmZY7ONa3yCi4u7pe56587R5dONeMihOHi4o5w94aoOg2VvcfDxcWd4SZlyk7iUm24FtoquLi4X+Pm6Uvy/V44K7wgXFzcm7gJqPNg1bIpLi7uPLc6FJWEqoRSbdLg4uJOcqvJR3UIoxrsLtImXFzcQW61OJI3WqJxivwV4OLiDnLztVcKyV9Bq/ODi4t7iFsNKElxJC+YVtszuLi4k9y9YawkJO0FsovQhouLO8jNyxN7j5RH0As6Li7uw7inMqb1sefiUISLi/tIbjREVUx9Cs0YXFzcQW5nZKrTXKkWYnBxcWe4ewXT6lhVtbSKi4t7E/cHI+qVjHUub8MAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

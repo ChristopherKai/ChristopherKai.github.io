@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>虚拟存储技术 | Kais&#39; Blog | hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="-操作系统 -笔记">
+    <meta name="description" content="虚拟内存虚拟内存解决的问题：原有的内存管理方式需要把整个程序加载到内存空间，如果只将程序的一部分加载到内存空间，有着以下优势： 1.程序大小不再决定于物理内存大小，计算机可以运行大于物理内存的程序2.计算机可以运行的程序增加，提示cpu利用率，吞吐量3.更少的置换I/O，不需swap in/out 虚拟内存的前提：1.程序的错误处理部分不会经常发生，可以开始不加载2.数组等数据结构分配的内存空间大">
+<meta name="keywords" content="-操作系统 -笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟存储技术">
+<meta property="og:url" content="http://kaisblog.cn/2018/05/20/虚拟存储技术/index.html">
+<meta property="og:site_name" content="Kais&#39; Blog">
+<meta property="og:description" content="虚拟内存虚拟内存解决的问题：原有的内存管理方式需要把整个程序加载到内存空间，如果只将程序的一部分加载到内存空间，有着以下优势： 1.程序大小不再决定于物理内存大小，计算机可以运行大于物理内存的程序2.计算机可以运行的程序增加，提示cpu利用率，吞吐量3.更少的置换I/O，不需swap in/out 虚拟内存的前提：1.程序的错误处理部分不会经常发生，可以开始不加载2.数组等数据结构分配的内存空间大">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517734351790.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517734814417.jpg">
+<meta property="og:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517845412780.jpg">
+<meta property="og:updated_time" content="2018-05-20T01:45:49.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="虚拟存储技术">
+<meta name="twitter:description" content="虚拟内存虚拟内存解决的问题：原有的内存管理方式需要把整个程序加载到内存空间，如果只将程序的一部分加载到内存空间，有着以下优势： 1.程序大小不再决定于物理内存大小，计算机可以运行大于物理内存的程序2.计算机可以运行的程序增加，提示cpu利用率，吞吐量3.更少的置换I/O，不需swap in/out 虚拟内存的前提：1.程序的错误处理部分不会经常发生，可以开始不加载2.数组等数据结构分配的内存空间大">
+<meta name="twitter:image" content="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517734351790.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Kais&#39; Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">kais</h5>
+          <a href="mailto:kaisong39@gmail.com" title="kaisong39@gmail.com" class="mail">kaisong39@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/ChristopherKai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">虚拟存储技术</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">虚拟存储技术</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-20T01:45:49.937Z" itemprop="datePublished" class="page-time">
+  2018-05-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#虚拟内存"><span class="post-toc-number">1.</span> <span class="post-toc-text">虚拟内存</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#虚拟内存解决的问题："><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">虚拟内存解决的问题：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#虚拟内存的前提："><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">虚拟内存的前提：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#demand-paging"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">demand paging</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#等效访问时间："><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">等效访问时间：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Page-Fault-服务程序"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">Page Fault 服务程序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#demand-paging请求调页实现方法"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">demand paging请求调页实现方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Note"><span class="post-toc-number">1.1.3.1.</span> <span class="post-toc-text">Note.</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Copy-on-Write-COW"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Copy-on-Write(COW)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#页面置换"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">页面置换</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#新的page-fault-服务程序"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">新的page fault 服务程序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#demand-paging-的2大核心算法"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">demand paging 的2大核心算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#LRU"><span class="post-toc-number">1.3.2.0.1.</span> <span class="post-toc-text">LRU</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#页面缓冲算法"><span class="post-toc-number">1.3.2.1.</span> <span class="post-toc-text">页面缓冲算法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#应用与页面置换"><span class="post-toc-number">1.3.2.2.</span> <span class="post-toc-text">应用与页面置换</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#页面分配算法"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">页面分配算法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#其他"><span class="post-toc-number">1.3.4.</span> <span class="post-toc-text">其他</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-虚拟存储技术"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">虚拟存储技术</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-20 09:45:49" datetime="2018-05-20T01:45:49.937Z"  itemprop="datePublished">2018-05-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h1><h3 id="虚拟内存解决的问题："><a href="#虚拟内存解决的问题：" class="headerlink" title="虚拟内存解决的问题："></a>虚拟内存解决的问题：</h3><p>原有的内存管理方式需要把整个程序加载到内存空间，如果只将程序的一部分加载到内存空间，有着以下优势：</p>
+<p>1.程序大小不再决定于物理内存大小，计算机可以运行大于物理内存的程序<br>2.计算机可以运行的程序增加，提示cpu利用率，吞吐量<br>3.更少的置换I/O，不需swap in/out</p>
+<h3 id="虚拟内存的前提："><a href="#虚拟内存的前提：" class="headerlink" title="虚拟内存的前提："></a>虚拟内存的前提：</h3><p>1.程序的错误处理部分不会经常发生，可以开始不加载<br>2.数组等数据结构分配的内存空间大于实际使用的内存空间<br>3.程序的特定功能很少被使用。比如美国政府电脑上平衡财政预算的程序部分。</p>
+<h2 id="demand-paging"><a href="#demand-paging" class="headerlink" title="demand paging"></a>demand paging</h2><p>Concept:To load pages only as they are needed.</p>
+<p>demand paging 引发诸多架构困难。</p>
+<h3 id="等效访问时间："><a href="#等效访问时间：" class="headerlink" title="等效访问时间："></a>等效访问时间：</h3><p>effective access time = (1 − p) × ma + p × page fault time.<br>p be the probability of a page fault (0 ≤ p ≤ 1)<br>the memory-access time, denoted ma</p>
+<h3 id="Page-Fault-服务程序"><a href="#Page-Fault-服务程序" class="headerlink" title="Page Fault 服务程序"></a>Page Fault 服务程序</h3><pre><code>1. Service the page-fault interrupt. 
+2. Read in the page. 
+3. Restart the process.
+</code></pre><p>硬盘上的置换分区（swap space）由于特殊的结构，访问速度比文件系统更快。</p>
+<h3 id="demand-paging请求调页实现方法"><a href="#demand-paging请求调页实现方法" class="headerlink" title="demand paging请求调页实现方法"></a>demand paging请求调页实现方法</h3><pre><code>1.加载进程前，将整个程序加载到置换分区，然后demand paging
+2.将程序从文件系统按需加载，当页面被置换的时候，将页面写入置换分区。这种方法保证了只有所需的页面从文件系统加载，后续的paging从置换分区进行。
+3.需求页面从文件系统加载，当页面置换时，原有页面会被覆盖（因为是纯代码，需求时可从文件系统加载），置换分区主要负责heap，stack等内存页面（被称作匿名内存）。备用于Solaris和BSD Linux。
+</code></pre><p>移动设备操作系统不支持换页swapping，当需求页面时，直接从文件系统加载。当内存不足时，直接回收只读纯代码页面。<br>在iOS下，匿名内存页面永不回收，除非应用被终止或明确释放内存。</p>
+<p>总结，方法3类似移动设备的解决方案，都从文件系统加载，内存不足都会直接覆盖页面，该页面再需求时，再从文件系统加载。区别于，方法3会将匿名内存swap到置换分区上，移动设备则几乎永远保留。</p>
+<h4 id="Note"><a href="#Note" class="headerlink" title="Note."></a>Note.</h4><p>fork()创建新进程可以不需要demand paging，直接page sharing即可。</p>
+<h2 id="Copy-on-Write-COW"><a href="#Copy-on-Write-COW" class="headerlink" title="Copy-on-Write(COW)"></a>Copy-on-Write(COW)</h2><p>指定特定物理页面为copy-on-wirte(仅可修改页面)，当进程需要写入该页面时候(on write)，复制一份(copy)。</p>
+<p>fork()的时候，新进程指向和原进程相同的物理页面，只不过部分页面指定为copy-on-write。当新进程需要写入操作，比如增加stack，heap等，由操作系统从frea pages pool寻找空闲页面，进行zero-fill-on-demand，用0填充。</p>
+<p>fork()基于copy-on-write实现，而 vfork()则不使用copy-on-write技术，此方法下，父进程会暂停，子进程继承父进程的地址空间，子进程对地址空间的修改将会在父进程恢复后可见。vfork()常用于子进程须立即调用exec()的情况。在没有COW技术以前，fork()成本很高，需要完全复制新的地址空间，所以在fork()后使用exec丢弃原有地址空间，加载新地址空间是种浪费，所以设计了vfork()，和父进程共享地址空间，执行exec后使用新的地址空间，提高效率。当有COW技术后，vfork()+exec()和fork() + exec()效率几乎一样。<br><a href="https://techdifferences.com/difference-between-fork-and-vfork.html" target="_blank" rel="external">Difference Between fork() and vfork()</a><br><a href="https://stackoverflow.com/questions/4856255/the-difference-between-fork-vfork-exec-and-clone" target="_blank" rel="external">fork,vfork</a></p>
+<h2 id="页面置换"><a href="#页面置换" class="headerlink" title="页面置换"></a>页面置换</h2><p>在使用demand paging的时候虽然增加了系统同时执行多道程序能力，然而会造成内存的过分配(over-allocating)。当page fault发生，然而此时没有空闲页面的时候，就需要页面置换了。</p>
+<p>当没有空闲页面时，page fault后可以选择<br>    1.中断该程序<br>    2.置换一整个进程<br>    3.置换一个页面到置换分区 page replacement</p>
+<h3 id="新的page-fault-服务程序"><a href="#新的page-fault-服务程序" class="headerlink" title="新的page fault 服务程序"></a>新的page fault 服务程序</h3><ol>
+<li>Find the location of the desired page on the disk.</li>
+<li>Find a free frame:<br> a. If there is a free frame, use it.<br> b. If there is no free frame, use a page-replacement algorithm to select a victim frame.<br> c. Write the victim frame to the disk; change the page and frame tables accordingly.</li>
+<li>Read the desired page into the newly freed frame; change the page and<br>frame tables.</li>
+<li>Continue the user process from where the page fault occurred.</li>
+</ol>
+<p>Note.<br>在没有空闲页面的时候，需要将1张待用的页面置换入内存，1张暂时不用的页面置换到置换分区。这样就降低了服务程序的效率。所以在页表上应当设置dirty bit(modify bit)，指明该页面自从从文件系统加载到内存有无修改。如果无修改，则无需将该页面置换到置换分区，直接将其用新的待加载页面覆盖即可，提升了效率。</p>
+<h3 id="demand-paging-的2大核心算法"><a href="#demand-paging-的2大核心算法" class="headerlink" title="demand paging 的2大核心算法"></a>demand paging 的2大核心算法</h3><ol>
+<li>frame-allocation algorithm 页面分配算法</li>
+<li>page-replacement algorithm 页面置换算法</li>
+</ol>
+<p>page-replacement algorithm 物理页面分配算法主要解决，当加载一个进程的时候，到底给其分配多少物理内存页面的问题。</p>
+<p>page-replacement algorithm 页面置换算法主要解决如何选择置换页面的问题。算法好的标准，低的page fault rate。</p>
+<p><strong>置换算法分类：</strong></p>
+<ul>
+<li>局部置换算法，只置换本进程的物理页面。进程分配页面数不会改变。</li>
+<li>全局置换算法，会跨进程置换物理页面。页面数会变化。缺点：无法控制自己的page fault rate。</li>
+</ul>
+<p>局部置换算法</p>
+<ol>
+<li>最优置换算法(OPT)：理想化，不可实现，在时间轴上向前看，将未来最久才会被访问的页面置换出去</li>
+<li>最近最久未使用算法(LRU)：难实现，在时间轴上向后看，根据之前对也页面的访问统计进行置换，least recently used的页面会被置换</li>
+<li>FIFO，根据加载到内存的顺序进行置换</li>
+<li>clock，时钟置换算法，即在FIFO基础上，将页表内设置访问位，页面置换时，从前往后，只置换未访问页面，如果扫描中发现某页为已访问，则置为未访问状态，重新计时，并跳到下一页查找置换页。如同时钟一样扫描环形链表。又叫二次机会页面置换算法</li>
+<li>LFU，最不常用页面置换算法</li>
+<li>MFU，最常用页面置换算法，基于刚置入内存的页面访问频率很低的论据。</li>
+</ol>
+<h5 id="LRU"><a href="#LRU" class="headerlink" title="LRU"></a>LRU</h5><p>实现方法：</p>
+<ol>
+<li>counters计数器 在页表内设置记载访问时间的位，当内存访问时，将当前时钟寄存器内容复制到<br>page table记载位。这种方法需要搜索页表查找置换页，以及每次访问内存都得写内存。</li>
+<li>Stack。越往上越最近使用。每次内存访问，将访问页置顶，需要置换时，将stack底部页面置换。</li>
+</ol>
+<p><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517734351790.jpg" alt="stack实现的LRU置换算法"></p>
+<p>Note.<br>Belady现象<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517734814417.jpg" alt="belady现象"><br>随着物理内存增加，page fault rate增加。LRU，OPT等stack算法不会出现这种现象。 the set of pages in memory for n<br>frames is always a subset of the set of pages that would be in memory with n + 1 frames.即物理内存增大1页，原有的内存页面集合是增大后的内存页面集合的子集。</p>
+<p><strong>额外引用位算法</strong></p>
+<p>每次内存访问，引用位置1。页表内设置8比特的访问记录。每隔一段时间，访问记录右移一位，将引用位移到访问记录到最高位上，丢弃原有最低位。<br>这样00000000表示8个时间间隔内未访问该页，11111111表示每个时间间隔都访问了该页，11001100比起00110011更最近使用。如果将该记录解释为无符号整数，数字最小的将会是LRU页面，可以置换。</p>
+<p>这些访问记录位的数量可以改变，如果变为0，也就是<strong>二次机会页面置换算法</strong>aka clock算法</p>
+<p><strong>增强的clock算法</strong>考虑了修改位，这种算法减少了修改页的处理开销，尽量避免置换修改页。</p>
+<h4 id="页面缓冲算法"><a href="#页面缓冲算法" class="headerlink" title="页面缓冲算法"></a>页面缓冲算法</h4><p>1.先加载页面到空闲物理内存，再置换victim物理页面到外存，并加入free frames pool，加速了进程重启速度。<br>2.周期性将修改过的页面写入置换分区，这样page fault适合，页面大概率时干净的，无需再次写入外存。<br>3.free-frame buffer ？？？<br>4.freaa-frame buffer pool:始终保留一定的空闲页面池，进程需要则分配，随后在进行页面置换，保持空闲页面池。</p>
+<h4 id="应用与页面置换"><a href="#应用与页面置换" class="headerlink" title="应用与页面置换"></a>应用与页面置换</h4><p>有些情况下，应用通过虚拟内存访问数据的性能比没有的时候更差。比如数据库。<br>比如，数据仓库读取大量数据，然后计算后写入磁盘。LRU会保留新页面，然而应用更倾向于先使用旧的页面的数据进行计算。<br>因此，操作系统提供了raw disk和raw IO，绕过了文件系统。</p>
+<p><strong>最小页面数</strong><br>进程最小页面数由系统架构(ISA)决定。具体来说，最小页面数由一条指令可能引用的页面数决定。如果不包含间接定址，只需要2个页面即可，1个指令页面，1个操作数页面。如果一条指令由于多次间接引用，需要访问不同页面，在到达执行步骤前未能将所需操作数取到，将会不断page fault，无法执行，最终需要分配不小于该条指令引用的页面数，即最小页面数。</p>
+<h3 id="页面分配算法"><a href="#页面分配算法" class="headerlink" title="页面分配算法"></a>页面分配算法</h3><p>平均分配未考虑进程特性，会造成内存浪费。<br>按比例分配：按单个进程所需页面数与所有进程所需页面数的比例分配页面。需要大内存的进程分得更多页面。</p>
+<p><strong>NUMA非均匀内存访问</strong><br>由于主板，cpu，内存的布局结构问题，cpu访问不同的内存位置，访问时间会不同。<br>分配算法的修改思路：随着调度器将进程调度到某个cpu上，对应地分配内存时，应将内存分配到和cpu同一块system board的内存部分上。</p>
+<p><strong>Thrashing</strong><br>由于内存不足，一个进程的换页时间大于其执行时间。<br><img src="https://www.github.com/ChristopherKai/picsRepo/raw/master/%E5%B0%8F%E4%B9%A6%E5%8C%A0/1517845412780.jpg" alt="Thranshing"></p>
+<p>原因：一个进程内存不够page fault的时候，使用<em>全局置换算法</em>，将其他进程的页面置换到外存，然而置换出去的页面也是对应进程需要的。被置换页面的进程由于所需页面被置换，page fault继续倾吞其他进程的页面，最终导致所有进程互相倾吞对方的内存页面，不断的页面置换，进程全部暂停，处于等待磁盘IO的状态，CPU误以为利用率低，继续产生进程，提升多道程序能力，加剧这种现象，事实是CPU利用率更低。</p>
+<p>解决办法：先考虑使用局部置换算法，这样，一个进程thrash了，无法窃取其他进程内存，无法造成其他进程的thrash。这样保证其他进程不会被影响。但是该进程处于始终等待paging device的状态，page fault的服务时间增加，影响了别的进程的EAT（等效访问时间）。想要彻底解决该问题，就需要保证分配给进程足够的页面数。</p>
+<p>如何确定进程所需的页面数：<br>1.工作集策略。此方法定义了进程的局部性模型。局部性模型指进程运行时，从一个部分运行到另外一个部分。当不满足当前局部性时，会一直page fault，直到所有所需页面加载完毕，在转移局部性时，再次page fault，直到再次满足局部性。</p>
+<p><strong>工作集模型</strong><br>工作集窗口：delta，最近的delta次页面访问<br>工作集：最近的delta次页面访问的页面集合，可以近似进程的局部性</p>
+<p>关键：确定delta的大小，使得工作集体现进程的局部性。</p>
+<p><strong>工作集置换算法</strong></p>
+<p>假定delta为工作集窗口，delta次访问过页面即为工作集，在每次访问的时候，换出不在工作集页面，缺页则直接置入页面。</p>
+<p>思想，每次访存剔除不在工作集页面，缺页则将页面置入。</p>
+<p><strong>缺页率置换算法</strong></p>
+<p>缺页率：缺页次数/访存次数，或者缺页时间间隔的倒数。</p>
+<p>两次缺页间隔 &gt; 某一阈值 ，置换这两次间隔内未被引用的页面。<br>两次缺页间隔 &lt;= 某一阈值，将所缺页面加入常驻集。</p>
+<p>思想：在缺页时根据缺页时间间隔改变常驻集以适应工作集。</p>
+<p><strong>Memory-mapped Files</strong></p>
+<p>//TODO</p>
+<p><strong>Memory-mapped IO</strong></p>
+<p>//TODO</p>
+<p><strong>内核内存分配</strong></p>
+<p>为了避免页式内存管理造成的碎片，以及特定硬件需要连续内存，内核内存分配使用连续分配算法。</p>
+<pre><code>1.伙伴系统内存分配 Buddy system
+2.Slab内存分配，Slub，Slob内存分配
+</code></pre><h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a><strong><strong>其他</strong></strong></h3><p><strong>预先调页 prepaging</strong></p>
+<p>避免纯粹调页下，进程启动时的大量page faults。在暂停进程时，讲进程的工作集记录，再次启动时，先将工作集调入内存。</p>
+<p><strong>页面大小 page size</strong></p>
+<p>//</p>
+<p><strong>TLR reach</strong></p>
+<p>//</p>
+<p><strong>反置页表与请求调页</strong></p>
+<p>//</p>
+<p><strong>程序结构</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i, j;</span><br><span class="line"><span class="keyword">int</span>[<span class="number">128</span>][<span class="number">128</span>] data;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">128</span>; i++)</span><br><span class="line"><span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">128</span>; j++)</span><br><span class="line">data[i][j] = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>虽然虚拟内存对程序透明，但是应当尽量提升程序的局部性，减少page faults。</p>
+<p><strong>I/O Interlock and Page Locking</strong></p>
+<p>页面锁为了防止出现以下情况：<br>一个进程请求IO，等待IO数据加载到内存缓冲页面。CPU调度到了其他进程。其他进程发生page fault，而且使用全局置换算法，置换了等待进程的缓冲页面。等到IO请求完成时，数据覆盖了该进程。</p>
+<p>解决方案：<br>1.避免将IO写入用户内存。IO只发生在内核内存和IO设备间。  （X 复制开销太大）<br>2.在内存页面设置lock位，在IO期间，lock位置位。页面置换算法则会不去置换锁定(lock)的页面。</p>
+<p>此外，内核常将自身内存锁定。某些应用程序，如数据库对自身内存使用情况更为了解，会将内存锁定，避免置换。操作系统会提供相关syscall。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">POSIX</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mlock</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *addr, <span class="keyword">size_t</span> len)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">munlock</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *addr, <span class="keyword">size_t</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mlockall</span><span class="params">(<span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">munlockall</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; mlock() <span class="function"><span class="keyword">and</span> <span class="title">munlock</span><span class="params">()</span> <span class="title">mlock</span><span class="params">()</span> locks pages in the address range</span></span><br><span class="line">&gt; starting at addr and continuing  for  len  bytes. All pages that</span><br><span class="line">&gt; contain a part of the specified address range are guaranteed to be</span><br><span class="line">&gt; resident in RAM when the call returns successfully; the pages are</span><br><span class="line">&gt; guaranteed to stay in  RAM  until later unlocked.</span><br><span class="line">&gt; </span><br><span class="line">&gt; munlock()  unlocks  pages  in  the  address  range starting at addr</span><br><span class="line">&gt; <span class="keyword">and</span> continuing <span class="keyword">for</span> len bytes.  After <span class="keyword">this</span> call, all pages that contain</span><br><span class="line">&gt; a part of the specified memory  range  can be moved to external swap</span><br><span class="line">&gt; space again by the kernel.</span><br><span class="line"></span><br><span class="line">WIN</span><br><span class="line"><span class="function">BOOL WINAPI <span class="title">VirtualLock</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ LPVOID lpAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ SIZE_T dwSize</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>内存页面的位：<br>1.reference bit 记录一段时间内的页面访问情况，统计工作集，用于页面置换算法。<br>2.modify bit 记录页面自从从外存加载到内存有无修改，若无，则在页面置换的时候无需换出，直接覆盖。<br>2.modify bit 记录页面自从从外存加载到内存有无修改，若无，则在页面置换的时候无需换出，直接覆盖。<br>3.lock bit 防止置换算法将页面换出。<br>4.presenece bit 存在位，是否存在对应frame，触发page fault，继而请求调页。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-20T01:45:49.938Z" itemprop="dateUpdated">2018-05-20 09:45:49</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/05/20/虚拟存储技术/" target="_blank" rel="external">http://kaisblog.cn/2018/05/20/虚拟存储技术/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://kaisblog.cn">
+            <img src="https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" alt="kais">
+            kais
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统-笔记/">-操作系统 -笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&title=《虚拟存储技术》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&title=《虚拟存储技术》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/虚拟存储技术/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟存储技术》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/20/进程/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">进程</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/20/编译原理简述/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">编译原理简述</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChristopherKai',
+            repo: 'https://github.com/ChristopherKai/blog_comments.git',
+            oauth: {
+                client_id: '6fb2f2be653858b2fa36',
+                client_secret: '7cae40cce19a58e33e387af2d9814692167e8772',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>kais &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&title=《虚拟存储技术》 — Kais' Blog&pic=https://avatars2.githubusercontent.com/u/3326425?s=460&v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&title=《虚拟存储技术》 — Kais' Blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://kaisblog.cn/2018/05/20/虚拟存储技术/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟存储技术》 — Kais' Blog&url=http://kaisblog.cn/2018/05/20/虚拟存储技术/&via=http://kaisblog.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://kaisblog.cn/2018/05/20/虚拟存储技术/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJUlEQVR42u3a227CMBAFQP7/p6nUVwScsw5VsSdPkaHE40qr7OV2i6/77/V43648rj9++uw7F1wYGBhfy7i/vJ5t4tmnV1353jAwMM5hrAfZdj0JysVTMDAwMF4Gu5WQioGBgfEJRruS/Foe6DEwME5mJMnkbENtGP14Lo6BgfGFjJXGwKfv/6i/gYGB8Y8Z6yX79gjycluxHwwMjK0Zs7LarIW53i59c4gYGBibMhJAG3bbZDVvbT5NmzEwMLZmzEpabemtXW+bphgYGCcw8lpWW/Sf3bcDGRgYGBh5aeyq0n+b3GJgYJzGaLe7sp7/VdJmwMDA2JvRbqJ9fcynI5ZSXwwMjK0Z+UhE2xIoRiVGo2lv/icYGBgbMWaFsNnYRB6+68EyDAyMYxivH9a2G9uSXBJYo+EwDAyMjRizEnw+KLY+rhGFZgwMjK0ZeUNxpRfa/v7sCDAwMHZlrITR/EUwOsuFjiQGBsYJjLyslpfDVkpp9UsnBgbG1owLOp8fGCBrwy4GBsbejLwBOUtfV4bD8lYoBgbG3oxZ0Gx7pG0yPCvbYWBg7MqYDXslYxnDHsXoKDEwMPZm5Nfrh+XFu2vLahgYGOcw8mZAvqH15kGbVGNgYJzAmA2EzQYmZlH/zS9gYGBgjEpjbXrcHlPRf8DAwDiG0SarycvfrAyHgYFxJmM2eJEntPmm83GxC3JxDAyML2GsvHetJK4r4xo1AAMD41sZP7UdMwjIV0i+AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
